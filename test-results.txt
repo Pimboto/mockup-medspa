@@ -1,0 +1,252 @@
+Test Results - Wed 08/13/2025 12:05:06.96 
+===================================== 
+ 
+ 
+[GET] /health 
+------------------------------------- 
+{"status":"healthy","timestamp":"2025-08-13T17:05:07.040Z","service":"MedSpa Booking Backend","version":"1.0.0"} 
+ 
+[GET] / 
+------------------------------------- 
+{"message":"Welcome to MedSpa AI Receptionist Booking API","documentation":"/api/v1/docs","endpoints":{"bookings":"/api/v1/bookings","availability":"/api/v1/availability","services":"/api/v1/services","stats":"/api/v1/stats","webhook":"/api/v1/webhook"},"timestamp":"2025-08-13T17:05:07.108Z"} 
+ 
+[GET] /api/v1/docs 
+------------------------------------- 
+{"title":"MedSpa AI Receptionist Booking API","version":"1.0.0","description":"Backend mockup for MedSpa AI Receptionist booking system - Perfect for n8n integration","baseUrl":"http://localhost:3000/api/v1","authentication":{"type":"API Key","header":"x-api-key","value":"medspa-demo-api-key-2024","note":"Include API key in headers or as query parameter (?api_key=...)"},"endpoints":{"bookings":{"title":"Bookings Management","endpoints":[{"method":"GET","path":"/bookings","description":"Get all bookings with optional filters","queryParams":[{"name":"status","type":"string","options":["pending","confirmed","cancelled"]},{"name":"date","type":"string","format":"YYYY-MM-DD"},{"name":"clientEmail","type":"string"},{"name":"clientPhone","type":"string"},{"name":"from","type":"string","format":"YYYY-MM-DD"},{"name":"to","type":"string","format":"YYYY-MM-DD"}]},{"method":"GET","path":"/bookings/:id","description":"Get single booking by ID"},{"method":"POST","path":"/bookings","description":"Create new booking","body":{"clientName":"string (required)","clientEmail":"string (required)","clientPhone":"string (required)","serviceId":"string (required)","date":"string YYYY-MM-DD (required)","time":"string HH:mm (required)","notes":"string (optional)"}},{"method":"PUT","path":"/bookings/:id","description":"Update booking"},{"method":"POST","path":"/bookings/:id/confirm","description":"Confirm a booking","body":{"depositPaid":"boolean (optional)"}},{"method":"POST","path":"/bookings/:id/cancel","description":"Cancel a booking","body":{"reason":"string (optional)"}},{"method":"DELETE","path":"/bookings/:id","description":"Delete a booking permanently"},{"method":"POST","path":"/bookings/:id/deposit","description":"Process deposit payment"}]},"availability":{"title":"Availability Management","endpoints":[{"method":"GET","path":"/availability","description":"Get available time slots","queryParams":[{"name":"date","type":"string","format":"YYYY-MM-DD","required":true},{"name":"serviceId","type":"string","required":false},{"name":"days","type":"number","default":7}]},{"method":"GET","path":"/availability/check","description":"Check specific slot availability","queryParams":[{"name":"date","type":"string","format":"YYYY-MM-DD","required":true},{"name":"time","type":"string","format":"HH:mm","required":true}]},{"method":"GET","path":"/availability/business-hours","description":"Get business hours"},{"method":"PUT","path":"/availability/business-hours","description":"Update business hours","body":{"day":"string (required)","open":"string HH:mm (optional)","close":"string HH:mm (optional)","isOpen":"boolean (optional)"}}]},"services":{"title":"Services Management","endpoints":[{"method":"GET","path":"/services","description":"Get all services","queryParams":[{"name":"category","type":"string"},{"name":"available","type":"boolean"}]},{"method":"GET","path":"/services/:id","description":"Get single service"},{"method":"POST","path":"/services","description":"Create new service","body":{"name":"string (required)","category":"string (required)","description":"string (optional)","duration":"number in minutes (required)","price":"number (required)","depositRequired":"boolean (default: true)","depositPercentage":"number (default: 20)","available":"boolean (default: true)"}},{"method":"PUT","path":"/services/:id","description":"Update service"},{"method":"DELETE","path":"/services/:id","description":"Delete service"},{"method":"GET","path":"/services/categories/list","description":"Get all service categories"}]},"stats":{"title":"Statistics & Analytics","endpoints":[{"method":"GET","path":"/stats","description":"Get general statistics"},{"method":"GET","path":"/stats/revenue","description":"Get revenue statistics","queryParams":[{"name":"from","type":"string","format":"YYYY-MM-DD"},{"name":"to","type":"string","format":"YYYY-MM-DD"},{"name":"groupBy","type":"string","options":["day","week","month"],"default":"day"}]},{"method":"GET","path":"/stats/services","description":"Get service performance statistics"},{"method":"GET","path":"/stats/clients","description":"Get client statistics"},{"method":"GET","path":"/stats/dashboard","description":"Get dashboard summary with all key metrics"}]},"webhook":{"title":"Webhook Integration (for n8n)","endpoints":[{"method":"POST","path":"/webhook/n8n","description":"Main n8n webhook endpoint","body":{"action":"string (required)","data":"object (action-specific data)"},"actions":["checkAvailability","getBookingsCount","getTodayBookings","getUpcomingBookings","quickBooking","getServices","getStats"]},{"method":"GET","path":"/webhook/actions","description":"List all available webhook actions with examples"},{"method":"POST","path":"/webhook/test","description":"Test webhook endpoint for debugging"}]}},"n8nIntegration":{"title":"n8n Integration Guide","steps":[{"step":1,"title":"HTTP Request Node","description":"Use HTTP Request node in n8n","configuration":{"method":"POST","url":"http://localhost:3000/api/v1/webhook/n8n","authentication":"Header Auth","headers":{"x-api-key":"medspa-demo-api-key-2024","Content-Type":"application/json"}}},{"step":2,"title":"Example: Check Availability","jsonBody":{"action":"checkAvailability","data":{"date":"2024-12-20","time":"14:00"}}},{"step":3,"title":"Example: Create Quick Booking","jsonBody":{"action":"quickBooking","data":{"clientName":"John Doe","clientEmail":"john@email.com","clientPhone":"+1-555-0123","serviceId":"srv_001","bookingDate":"2024-12-25","bookingTime":"14:00"}}}]},"exampleResponses":{"booking":{"id":"uuid","clientName":"Sarah Johnson","clientEmail":"sarah.j@email.com","clientPhone":"+1-555-0101","service":"Botox Treatment","serviceId":"srv_001","date":"2024-12-20","time":"10:00","duration":60,"price":450,"depositAmount":90,"depositPaid":true,"status":"confirmed","notes":"First time client","createdAt":"2024-12-15T09:00:00Z","updatedAt":"2024-12-15T09:00:00Z"},"service":{"id":"srv_001","name":"Botox Treatment","category":"Injectables","description":"Reduce fine lines and wrinkles","duration":60,"price":450,"depositRequired":true,"depositPercentage":20,"available":true}},"statusCodes":{"200":"Success","201":"Created","400":"Bad Request","401":"Unauthorized (Invalid API Key)","404":"Not Found","409":"Conflict (e.g., time slot already booked)","500":"Internal Server Error"}} 
+ 
+[GET] /api/v1/bookings 
+------------------------------------- 
+{"success":true,"count":6,"data":[{"id":"11126687-0412-4aaa-a11a-6d74e3ffa291","clientName":"Sarah Johnson","clientEmail":"sarah.j@email.com","clientPhone":"+1-555-0101","service":"Botox Treatment","serviceId":"srv_001","date":"2024-12-20","time":"10:00","duration":60,"price":450,"depositAmount":90,"depositPaid":true,"status":"confirmed","notes":"First time client, referred by Dr. Smith","createdAt":"2024-12-15T09:00:00.000Z","updatedAt":"2024-12-15T09:00:00.000Z"},{"id":"d81e3649-7b7c-41c3-97b8-9f3a532c4def","clientName":"Michael Chen","clientEmail":"m.chen@email.com","clientPhone":"+1-555-0102","service":"Hydrafacial","serviceId":"srv_002","date":"2024-12-20","time":"14:00","duration":90,"price":250,"depositAmount":50,"depositPaid":true,"status":"confirmed","notes":"Regular client, sensitive skin","createdAt":"2024-12-14T10:00:00.000Z","updatedAt":"2024-12-14T10:00:00.000Z"},{"id":"41e97044-41ba-4074-9389-06fdd8701d55","clientName":"Emma Wilson","clientEmail":"emma.w@email.com","clientPhone":"+1-555-0103","service":"Laser Hair Removal","serviceId":"srv_003","date":"2024-12-21","time":"11:00","duration":120,"price":600,"depositAmount":120,"depositPaid":false,"status":"pending","notes":"Needs to pay deposit","createdAt":"2024-12-16T14:00:00.000Z","updatedAt":"2024-12-16T14:00:00.000Z"},{"id":"f694fad6-43c9-4e82-86cf-932e69013ce2","clientName":"David Martinez","clientEmail":"d.martinez@email.com","clientPhone":"+1-555-0104","service":"Chemical Peel","serviceId":"srv_004","date":"2024-12-21","time":"15:00","duration":60,"price":350,"depositAmount":70,"depositPaid":true,"status":"confirmed","notes":"Allergic to certain chemicals - check chart","createdAt":"2024-12-13T11:00:00.000Z","updatedAt":"2024-12-13T11:00:00.000Z"},{"id":"a5fe18d5-292a-4c67-b81a-be9f7c32f352","clientName":"Lisa Anderson","clientEmail":"lisa.a@email.com","clientPhone":"+1-555-0105","service":"Microneedling","serviceId":"srv_005","date":"2024-12-22","time":"09:00","duration":75,"price":400,"depositAmount":80,"depositPaid":true,"status":"confirmed","notes":"VIP client","createdAt":"2024-12-10T08:00:00.000Z","updatedAt":"2024-12-10T08:00:00.000Z"},{"id":"1dd71627-1668-44fe-aa30-a656211985b4","clientName":"Robert Taylor","clientEmail":"r.taylor@email.com","clientPhone":"+1-555-0106","service":"Dermal Fillers","serviceId":"srv_006","date":"2024-12-22","time":"13:00","duration":90,"price":800,"depositAmount":160,"depositPaid":true,"status":"cancelled","notes":"Cancelled due to emergency","createdAt":"2024-12-11T10:00:00.000Z","updatedAt":"2024-12-17T09:00:00.000Z","cancelledAt":"2024-12-17T09:00:00.000Z"}],"timestamp":"2025-08-13T17:05:07.266Z"} 
+ 
+[GET] /api/v1/bookings?status=confirmed 
+------------------------------------- 
+{"success":true,"count":4,"data":[{"id":"11126687-0412-4aaa-a11a-6d74e3ffa291","clientName":"Sarah Johnson","clientEmail":"sarah.j@email.com","clientPhone":"+1-555-0101","service":"Botox Treatment","serviceId":"srv_001","date":"2024-12-20","time":"10:00","duration":60,"price":450,"depositAmount":90,"depositPaid":true,"status":"confirmed","notes":"First time client, referred by Dr. Smith","createdAt":"2024-12-15T09:00:00.000Z","updatedAt":"2024-12-15T09:00:00.000Z"},{"id":"d81e3649-7b7c-41c3-97b8-9f3a532c4def","clientName":"Michael Chen","clientEmail":"m.chen@email.com","clientPhone":"+1-555-0102","service":"Hydrafacial","serviceId":"srv_002","date":"2024-12-20","time":"14:00","duration":90,"price":250,"depositAmount":50,"depositPaid":true,"status":"confirmed","notes":"Regular client, sensitive skin","createdAt":"2024-12-14T10:00:00.000Z","updatedAt":"2024-12-14T10:00:00.000Z"},{"id":"f694fad6-43c9-4e82-86cf-932e69013ce2","clientName":"David Martinez","clientEmail":"d.martinez@email.com","clientPhone":"+1-555-0104","service":"Chemical Peel","serviceId":"srv_004","date":"2024-12-21","time":"15:00","duration":60,"price":350,"depositAmount":70,"depositPaid":true,"status":"confirmed","notes":"Allergic to certain chemicals - check chart","createdAt":"2024-12-13T11:00:00.000Z","updatedAt":"2024-12-13T11:00:00.000Z"},{"id":"a5fe18d5-292a-4c67-b81a-be9f7c32f352","clientName":"Lisa Anderson","clientEmail":"lisa.a@email.com","clientPhone":"+1-555-0105","service":"Microneedling","serviceId":"srv_005","date":"2024-12-22","time":"09:00","duration":75,"price":400,"depositAmount":80,"depositPaid":true,"status":"confirmed","notes":"VIP client","createdAt":"2024-12-10T08:00:00.000Z","updatedAt":"2024-12-10T08:00:00.000Z"}],"timestamp":"2025-08-13T17:05:07.347Z"} 
+ 
+[GET] /api/v1/bookings?from=2024-12-20&to=2024-12-22 
+------------------------------------- 
+{"success":true,"count":6,"data":[{"id":"11126687-0412-4aaa-a11a-6d74e3ffa291","clientName":"Sarah Johnson","clientEmail":"sarah.j@email.com","clientPhone":"+1-555-0101","service":"Botox Treatment","serviceId":"srv_001","date":"2024-12-20","time":"10:00","duration":60,"price":450,"depositAmount":90,"depositPaid":true,"status":"confirmed","notes":"First time client, referred by Dr. Smith","createdAt":"2024-12-15T09:00:00.000Z","updatedAt":"2024-12-15T09:00:00.000Z"},{"id":"d81e3649-7b7c-41c3-97b8-9f3a532c4def","clientName":"Michael Chen","clientEmail":"m.chen@email.com","clientPhone":"+1-555-0102","service":"Hydrafacial","serviceId":"srv_002","date":"2024-12-20","time":"14:00","duration":90,"price":250,"depositAmount":50,"depositPaid":true,"status":"confirmed","notes":"Regular client, sensitive skin","createdAt":"2024-12-14T10:00:00.000Z","updatedAt":"2024-12-14T10:00:00.000Z"},{"id":"41e97044-41ba-4074-9389-06fdd8701d55","clientName":"Emma Wilson","clientEmail":"emma.w@email.com","clientPhone":"+1-555-0103","service":"Laser Hair Removal","serviceId":"srv_003","date":"2024-12-21","time":"11:00","duration":120,"price":600,"depositAmount":120,"depositPaid":false,"status":"pending","notes":"Needs to pay deposit","createdAt":"2024-12-16T14:00:00.000Z","updatedAt":"2024-12-16T14:00:00.000Z"},{"id":"f694fad6-43c9-4e82-86cf-932e69013ce2","clientName":"David Martinez","clientEmail":"d.martinez@email.com","clientPhone":"+1-555-0104","service":"Chemical Peel","serviceId":"srv_004","date":"2024-12-21","time":"15:00","duration":60,"price":350,"depositAmount":70,"depositPaid":true,"status":"confirmed","notes":"Allergic to certain chemicals - check chart","createdAt":"2024-12-13T11:00:00.000Z","updatedAt":"2024-12-13T11:00:00.000Z"},{"id":"a5fe18d5-292a-4c67-b81a-be9f7c32f352","clientName":"Lisa Anderson","clientEmail":"lisa.a@email.com","clientPhone":"+1-555-0105","service":"Microneedling","serviceId":"srv_005","date":"2024-12-22","time":"09:00","duration":75,"price":400,"depositAmount":80,"depositPaid":true,"status":"confirmed","notes":"VIP client","createdAt":"2024-12-10T08:00:00.000Z","updatedAt":"2024-12-10T08:00:00.000Z"},{"id":"1dd71627-1668-44fe-aa30-a656211985b4","clientName":"Robert Taylor","clientEmail":"r.taylor@email.com","clientPhone":"+1-555-0106","service":"Dermal Fillers","serviceId":"srv_006","date":"2024-12-22","time":"13:00","duration":90,"price":800,"depositAmount":160,"depositPaid":true,"status":"cancelled","notes":"Cancelled due to emergency","createdAt":"2024-12-11T10:00:00.000Z","updatedAt":"2024-12-17T09:00:00.000Z","cancelledAt":"2024-12-17T09:00:00.000Z"}],"timestamp":"2025-08-13T17:05:07.423Z"} 
+ 
+[POST] /api/v1/bookings 
+Body: 
+{ 
+  "clientName": "Test Client", 
+  "clientEmail": "test@example.com", 
+  "clientPhone": "+1-555-0199", 
+  "serviceId": "srv_001", 
+  "date": "2024-12-25", 
+  "time": "16:00", 
+  "notes": "Test booking via cURL" 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"message":"Booking created successfully","data":{"id":"cdb6ccb9-9f63-4fd4-8103-b93b01e842cd","clientName":"Test Client","clientEmail":"test@example.com","clientPhone":"+1-555-0199","service":"Botox Treatment","serviceId":"srv_001","date":"2024-12-25","time":"16:00","duration":60,"price":450,"depositAmount":90,"depositPaid":false,"status":"pending","notes":"Test booking via cURL","createdAt":"2025-08-13T17:05:07.628Z","updatedAt":"2025-08-13T17:05:07.628Z"},"timestamp":"2025-08-13T17:05:07.628Z"} 
+ 
+[GET] /api/v1/availability?date=2024-12-20&days=3 
+------------------------------------- 
+{"success":true,"count":26,"data":[{"date":"2024-12-20","time":"09:00","datetime":"2024-12-20T14:00:00.000Z","available":true},{"date":"2024-12-20","time":"09:30","datetime":"2024-12-20T14:30:00.000Z","available":true},{"date":"2024-12-20","time":"10:30","datetime":"2024-12-20T15:30:00.000Z","available":true},{"date":"2024-12-20","time":"11:00","datetime":"2024-12-20T16:00:00.000Z","available":true},{"date":"2024-12-20","time":"11:30","datetime":"2024-12-20T16:30:00.000Z","available":true},{"date":"2024-12-20","time":"12:00","datetime":"2024-12-20T17:00:00.000Z","available":true},{"date":"2024-12-20","time":"12:30","datetime":"2024-12-20T17:30:00.000Z","available":true},{"date":"2024-12-20","time":"13:00","datetime":"2024-12-20T18:00:00.000Z","available":true},{"date":"2024-12-20","time":"13:30","datetime":"2024-12-20T18:30:00.000Z","available":true},{"date":"2024-12-20","time":"14:30","datetime":"2024-12-20T19:30:00.000Z","available":true},{"date":"2024-12-20","time":"15:00","datetime":"2024-12-20T20:00:00.000Z","available":true},{"date":"2024-12-20","time":"15:30","datetime":"2024-12-20T20:30:00.000Z","available":true},{"date":"2024-12-20","time":"16:00","datetime":"2024-12-20T21:00:00.000Z","available":true},{"date":"2024-12-20","time":"16:30","datetime":"2024-12-20T21:30:00.000Z","available":true},{"date":"2024-12-20","time":"17:00","datetime":"2024-12-20T22:00:00.000Z","available":true},{"date":"2024-12-20","time":"17:30","datetime":"2024-12-20T22:30:00.000Z","available":true},{"date":"2024-12-21","time":"10:00","datetime":"2024-12-21T15:00:00.000Z","available":true},{"date":"2024-12-21","time":"10:30","datetime":"2024-12-21T15:30:00.000Z","available":true},{"date":"2024-12-21","time":"11:30","datetime":"2024-12-21T16:30:00.000Z","available":true},{"date":"2024-12-21","time":"12:00","datetime":"2024-12-21T17:00:00.000Z","available":true},{"date":"2024-12-21","time":"12:30","datetime":"2024-12-21T17:30:00.000Z","available":true},{"date":"2024-12-21","time":"13:00","datetime":"2024-12-21T18:00:00.000Z","available":true},{"date":"2024-12-21","time":"13:30","datetime":"2024-12-21T18:30:00.000Z","available":true},{"date":"2024-12-21","time":"14:00","datetime":"2024-12-21T19:00:00.000Z","available":true},{"date":"2024-12-21","time":"14:30","datetime":"2024-12-21T19:30:00.000Z","available":true},{"date":"2024-12-21","time":"15:30","datetime":"2024-12-21T20:30:00.000Z","available":true}],"businessHours":{"monday":{"open":"09:00","close":"18:00","isOpen":true},"tuesday":{"open":"09:00","close":"18:00","isOpen":true},"wednesday":{"open":"09:00","close":"18:00","isOpen":true},"thursday":{"open":"09:00","close":"20:00","isOpen":true},"friday":{"open":"09:00","close":"18:00","isOpen":true},"saturday":{"open":"10:00","close":"16:00","isOpen":true},"sunday":{"open":"00:00","close":"00:00","isOpen":false}},"holidays":[{"date":"2024-12-25","name":"Christmas Day"},{"date":"2024-12-31","name":"New Year's Eve"},{"date":"2025-01-01","name":"New Year's Day"}],"timestamp":"2025-08-13T17:05:07.705Z"} 
+ 
+[GET] /api/v1/availability/check?date=2024-12-20&time=14:00 
+------------------------------------- 
+{"success":true,"data":{"date":"2024-12-20","time":"14:00","available":false,"isBooked":true,"isWithinBusinessHours":true,"dayOfWeek":"friday"},"timestamp":"2025-08-13T17:05:07.780Z"} 
+ 
+[GET] /api/v1/availability/business-hours 
+------------------------------------- 
+{"success":true,"data":{"monday":{"open":"09:00","close":"18:00","isOpen":true},"tuesday":{"open":"09:00","close":"18:00","isOpen":true},"wednesday":{"open":"09:00","close":"18:00","isOpen":true},"thursday":{"open":"09:00","close":"20:00","isOpen":true},"friday":{"open":"09:00","close":"18:00","isOpen":true},"saturday":{"open":"10:00","close":"16:00","isOpen":true},"sunday":{"open":"00:00","close":"00:00","isOpen":false}},"timestamp":"2025-08-13T17:05:07.857Z"} 
+ 
+[PUT] /api/v1/availability/business-hours 
+Body: 
+{ 
+  "day": "monday", 
+  "open": "08:00", 
+  "close": "19:00", 
+  "isOpen": true 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"message":"Business hours updated successfully","data":{"open":"08:00","close":"19:00","isOpen":true},"timestamp":"2025-08-13T17:05:08.007Z"} 
+ 
+[GET] /api/v1/services 
+------------------------------------- 
+{"success":true,"count":8,"data":[{"id":"srv_001","name":"Botox Treatment","category":"Injectables","description":"Reduce fine lines and wrinkles with our premium Botox treatment","duration":60,"price":450,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_002","name":"Hydrafacial","category":"Facials","description":"Deep cleanse, exfoliate, and hydrate your skin","duration":90,"price":250,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_003","name":"Laser Hair Removal","category":"Laser Treatments","description":"Permanent hair reduction using state-of-the-art laser technology","duration":120,"price":600,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_004","name":"Chemical Peel","category":"Skin Treatments","description":"Improve skin texture and tone with our medical-grade chemical peels","duration":60,"price":350,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_005","name":"Microneedling","category":"Skin Treatments","description":"Stimulate collagen production for smoother, younger-looking skin","duration":75,"price":400,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_006","name":"Dermal Fillers","category":"Injectables","description":"Restore volume and enhance facial contours","duration":90,"price":800,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_007","name":"IPL Photofacial","category":"Laser Treatments","description":"Treat sun damage, age spots, and improve skin tone","duration":60,"price":500,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_008","name":"CoolSculpting","category":"Body Contouring","description":"Non-invasive fat reduction treatment","duration":120,"price":1200,"depositRequired":true,"depositPercentage":25,"available":true}],"categories":["Injectables","Facials","Laser Treatments","Skin Treatments","Body Contouring"],"timestamp":"2025-08-13T17:05:08.082Z"} 
+ 
+[GET] /api/v1/services?category=Injectables 
+------------------------------------- 
+{"success":true,"count":2,"data":[{"id":"srv_001","name":"Botox Treatment","category":"Injectables","description":"Reduce fine lines and wrinkles with our premium Botox treatment","duration":60,"price":450,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_006","name":"Dermal Fillers","category":"Injectables","description":"Restore volume and enhance facial contours","duration":90,"price":800,"depositRequired":true,"depositPercentage":20,"available":true}],"categories":["Injectables","Facials","Laser Treatments","Skin Treatments","Body Contouring"],"timestamp":"2025-08-13T17:05:08.154Z"} 
+ 
+[GET] /api/v1/services/srv_001 
+------------------------------------- 
+{"success":true,"data":{"id":"srv_001","name":"Botox Treatment","category":"Injectables","description":"Reduce fine lines and wrinkles with our premium Botox treatment","duration":60,"price":450,"depositRequired":true,"depositPercentage":20,"available":true},"timestamp":"2025-08-13T17:05:08.227Z"} 
+ 
+[POST] /api/v1/services 
+Body: 
+{ 
+  "name": "Test Service", 
+  "category": "Test Category", 
+  "description": "Test service description", 
+  "duration": 60, 
+  "price": 299, 
+  "depositRequired": true, 
+  "depositPercentage": 20, 
+  "available": true 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"message":"Service created successfully","data":{"id":"srv_ae853454","name":"Test Service","category":"Test Category","description":"Test service description","duration":60,"price":299,"depositRequired":true,"depositPercentage":20,"available":true},"timestamp":"2025-08-13T17:05:08.436Z"} 
+ 
+[GET] /api/v1/services/categories/list 
+------------------------------------- 
+{"success":true,"count":6,"data":["Injectables","Facials","Laser Treatments","Skin Treatments","Body Contouring","Test Category"],"timestamp":"2025-08-13T17:05:08.509Z"} 
+ 
+[GET] /api/v1/stats 
+------------------------------------- 
+{"success":true,"data":{"totalBookings":7,"confirmedBookings":4,"pendingBookings":2,"cancelledBookings":1,"totalRevenue":1450,"totalDeposits":450,"popularServices":[{"service":"Botox Treatment","count":2},{"service":"Laser Hair Removal","count":1},{"service":"Hydrafacial","count":1},{"service":"Chemical Peel","count":1},{"service":"Microneedling","count":1}],"todayBookings":0,"todayRevenue":0,"upcomingBookings":0,"upcomingRevenue":0,"averageBookingValue":362.5,"conversionRate":"57.14%","cancellationRate":"14.29%"},"timestamp":"2025-08-13T17:05:08.582Z"} 
+ 
+[GET] /api/v1/stats/revenue?groupBy=day 
+------------------------------------- 
+{"success":true,"groupBy":"day","totalRevenue":1450,"totalBookings":4,"totalDeposits":290,"data":[{"period":"2024-12-20","revenue":700,"bookings":2,"deposits":140},{"period":"2024-12-21","revenue":350,"bookings":1,"deposits":70},{"period":"2024-12-22","revenue":400,"bookings":1,"deposits":80}],"timestamp":"2025-08-13T17:05:08.654Z"} 
+ 
+[GET] /api/v1/stats/services 
+------------------------------------- 
+{"success":true,"count":6,"data":[{"service":"Botox Treatment","serviceId":"srv_001","totalBookings":2,"confirmedBookings":1,"cancelledBookings":0,"pendingBookings":1,"totalRevenue":450,"averagePrice":450},{"service":"Microneedling","serviceId":"srv_005","totalBookings":1,"confirmedBookings":1,"cancelledBookings":0,"pendingBookings":0,"totalRevenue":400,"averagePrice":400},{"service":"Chemical Peel","serviceId":"srv_004","totalBookings":1,"confirmedBookings":1,"cancelledBookings":0,"pendingBookings":0,"totalRevenue":350,"averagePrice":350},{"service":"Hydrafacial","serviceId":"srv_002","totalBookings":1,"confirmedBookings":1,"cancelledBookings":0,"pendingBookings":0,"totalRevenue":250,"averagePrice":250},{"service":"Dermal Fillers","serviceId":"srv_006","totalBookings":1,"confirmedBookings":0,"cancelledBookings":1,"pendingBookings":0,"totalRevenue":0,"averagePrice":800},{"service":"Laser Hair Removal","serviceId":"srv_003","totalBookings":1,"confirmedBookings":0,"cancelledBookings":0,"pendingBookings":1,"totalRevenue":0,"averagePrice":600}],"mostPopular":{"service":"Botox Treatment","serviceId":"srv_001","totalBookings":2,"confirmedBookings":1,"cancelledBookings":0,"pendingBookings":1,"totalRevenue":450,"averagePrice":450},"highestRevenue":{"service":"Botox Treatment","serviceId":"srv_001","totalBookings":2,"confirmedBookings":1,"cancelledBookings":0,"pendingBookings":1,"totalRevenue":450,"averagePrice":450},"timestamp":"2025-08-13T17:05:08.727Z"} 
+ 
+[GET] /api/v1/stats/clients 
+------------------------------------- 
+{"success":true,"totalClients":7,"data":[{"clientName":"Sarah Johnson","clientEmail":"sarah.j@email.com","clientPhone":"+1-555-0101","totalBookings":1,"confirmedBookings":1,"totalSpent":450,"lastBooking":"2024-12-20","services":["Botox Treatment"]},{"clientName":"Lisa Anderson","clientEmail":"lisa.a@email.com","clientPhone":"+1-555-0105","totalBookings":1,"confirmedBookings":1,"totalSpent":400,"lastBooking":"2024-12-22","services":["Microneedling"]},{"clientName":"David Martinez","clientEmail":"d.martinez@email.com","clientPhone":"+1-555-0104","totalBookings":1,"confirmedBookings":1,"totalSpent":350,"lastBooking":"2024-12-21","services":["Chemical Peel"]},{"clientName":"Michael Chen","clientEmail":"m.chen@email.com","clientPhone":"+1-555-0102","totalBookings":1,"confirmedBookings":1,"totalSpent":250,"lastBooking":"2024-12-20","services":["Hydrafacial"]},{"clientName":"Robert Taylor","clientEmail":"r.taylor@email.com","clientPhone":"+1-555-0106","totalBookings":1,"confirmedBookings":0,"totalSpent":0,"lastBooking":"2024-12-22","services":["Dermal Fillers"]},{"clientName":"Emma Wilson","clientEmail":"emma.w@email.com","clientPhone":"+1-555-0103","totalBookings":1,"confirmedBookings":0,"totalSpent":0,"lastBooking":"2024-12-21","services":["Laser Hair Removal"]},{"clientName":"Test Client","clientEmail":"test@example.com","clientPhone":"+1-555-0199","totalBookings":1,"confirmedBookings":0,"totalSpent":0,"lastBooking":"2024-12-25","services":["Botox Treatment"]}],"topClients":[{"clientName":"Sarah Johnson","clientEmail":"sarah.j@email.com","clientPhone":"+1-555-0101","totalBookings":1,"confirmedBookings":1,"totalSpent":450,"lastBooking":"2024-12-20","services":["Botox Treatment"]},{"clientName":"Lisa Anderson","clientEmail":"lisa.a@email.com","clientPhone":"+1-555-0105","totalBookings":1,"confirmedBookings":1,"totalSpent":400,"lastBooking":"2024-12-22","services":["Microneedling"]},{"clientName":"David Martinez","clientEmail":"d.martinez@email.com","clientPhone":"+1-555-0104","totalBookings":1,"confirmedBookings":1,"totalSpent":350,"lastBooking":"2024-12-21","services":["Chemical Peel"]},{"clientName":"Michael Chen","clientEmail":"m.chen@email.com","clientPhone":"+1-555-0102","totalBookings":1,"confirmedBookings":1,"totalSpent":250,"lastBooking":"2024-12-20","services":["Hydrafacial"]},{"clientName":"Robert Taylor","clientEmail":"r.taylor@email.com","clientPhone":"+1-555-0106","totalBookings":1,"confirmedBookings":0,"totalSpent":0,"lastBooking":"2024-12-22","services":["Dermal Fillers"]},{"clientName":"Emma Wilson","clientEmail":"emma.w@email.com","clientPhone":"+1-555-0103","totalBookings":1,"confirmedBookings":0,"totalSpent":0,"lastBooking":"2024-12-21","services":["Laser Hair Removal"]},{"clientName":"Test Client","clientEmail":"test@example.com","clientPhone":"+1-555-0199","totalBookings":1,"confirmedBookings":0,"totalSpent":0,"lastBooking":"2024-12-25","services":["Botox Treatment"]}],"timestamp":"2025-08-13T17:05:08.801Z"} 
+ 
+[GET] /api/v1/stats/dashboard 
+------------------------------------- 
+{"success":true,"data":{"overview":{"totalBookings":7,"confirmedBookings":4,"pendingBookings":2,"cancelledBookings":1,"totalRevenue":1450,"totalDeposits":450,"popularServices":[{"service":"Botox Treatment","count":2},{"service":"Laser Hair Removal","count":1},{"service":"Hydrafacial","count":1},{"service":"Chemical Peel","count":1},{"service":"Microneedling","count":1}]},"today":{"bookings":0,"confirmed":0,"revenue":0},"thisWeek":{"bookings":0,"confirmed":0,"revenue":0},"thisMonth":{"bookings":0,"confirmed":0,"revenue":0},"upcomingBookings":[],"recentActivity":[{"id":"cdb6ccb9-9f63-4fd4-8103-b93b01e842cd","action":"pending","clientName":"Test Client","service":"Botox Treatment","date":"2024-12-25","updatedAt":"2025-08-13T17:05:07.628Z"},{"id":"1dd71627-1668-44fe-aa30-a656211985b4","action":"cancelled","clientName":"Robert Taylor","service":"Dermal Fillers","date":"2024-12-22","updatedAt":"2024-12-17T09:00:00.000Z"},{"id":"41e97044-41ba-4074-9389-06fdd8701d55","action":"pending","clientName":"Emma Wilson","service":"Laser Hair Removal","date":"2024-12-21","updatedAt":"2024-12-16T14:00:00.000Z"},{"id":"11126687-0412-4aaa-a11a-6d74e3ffa291","action":"confirmed","clientName":"Sarah Johnson","service":"Botox Treatment","date":"2024-12-20","updatedAt":"2024-12-15T09:00:00.000Z"},{"id":"d81e3649-7b7c-41c3-97b8-9f3a532c4def","action":"confirmed","clientName":"Michael Chen","service":"Hydrafacial","date":"2024-12-20","updatedAt":"2024-12-14T10:00:00.000Z"}]},"timestamp":"2025-08-13T17:05:08.875Z"} 
+ 
+[GET] /api/v1/webhook/actions 
+------------------------------------- 
+{"success":true,"message":"Available webhook actions for n8n integration","actions":[{"action":"checkAvailability","description":"Check if a specific time slot is available","requiredFields":["date","time"],"example":{"action":"checkAvailability","data":{"date":"2024-12-20","time":"14:00"}}},{"action":"getBookingsCount","description":"Get the total number of confirmed bookings","requiredFields":[],"example":{"action":"getBookingsCount","data":{}}},{"action":"getTodayBookings","description":"Get all bookings for today","requiredFields":[],"example":{"action":"getTodayBookings","data":{}}},{"action":"getUpcomingBookings","description":"Get upcoming confirmed bookings","requiredFields":[],"example":{"action":"getUpcomingBookings","data":{}}},{"action":"quickBooking","description":"Create a new booking quickly","requiredFields":["clientName","clientEmail","clientPhone","serviceId","bookingDate","bookingTime"],"example":{"action":"quickBooking","data":{"clientName":"John Doe","clientEmail":"john@email.com","clientPhone":"+1-555-0123","serviceId":"srv_001","bookingDate":"2024-12-25","bookingTime":"14:00"}}},{"action":"getServices","description":"Get all available services","requiredFields":[],"example":{"action":"getServices","data":{}}},{"action":"getStats","description":"Get booking statistics","requiredFields":[],"example":{"action":"getStats","data":{}}}],"timestamp":"2025-08-13T17:05:08.950Z"} 
+ 
+[POST] /api/v1/webhook/n8n 
+Body: 
+{ 
+  "action": "checkAvailability", 
+  "data": { 
+    "date": "2024-12-20", 
+    "time": "14:00" 
+  } 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"action":"checkAvailability","timestamp":"2025-08-13T17:05:09.135Z","data":{"available":false,"date":"2024-12-20","time":"14:00","message":"Slot is already booked"}} 
+ 
+[POST] /api/v1/webhook/n8n 
+Body: 
+{ 
+  "action": "getBookingsCount", 
+  "data": {} 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"action":"getBookingsCount","timestamp":"2025-08-13T17:05:09.272Z","data":{"count":4,"message":"You have 4 confirmed bookings"}} 
+ 
+[POST] /api/v1/webhook/n8n 
+Body: 
+{ 
+  "action": "getTodayBookings", 
+  "data": {} 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"action":"getTodayBookings","timestamp":"2025-08-13T17:05:09.407Z","data":{"count":0,"bookings":[],"message":"You have 0 bookings today"}} 
+ 
+[POST] /api/v1/webhook/n8n 
+Body: 
+{ 
+  "action": "getUpcomingBookings", 
+  "data": {} 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"action":"getUpcomingBookings","timestamp":"2025-08-13T17:05:09.555Z","data":{"count":0,"bookings":[],"message":"You have 0 upcoming bookings"}} 
+ 
+[POST] /api/v1/webhook/n8n 
+Body: 
+{ 
+  "action": "getServices", 
+  "data": {} 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"action":"getServices","timestamp":"2025-08-13T17:05:09.694Z","data":{"services":[{"id":"srv_001","name":"Botox Treatment","category":"Injectables","description":"Reduce fine lines and wrinkles with our premium Botox treatment","duration":60,"price":450,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_002","name":"Hydrafacial","category":"Facials","description":"Deep cleanse, exfoliate, and hydrate your skin","duration":90,"price":250,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_003","name":"Laser Hair Removal","category":"Laser Treatments","description":"Permanent hair reduction using state-of-the-art laser technology","duration":120,"price":600,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_004","name":"Chemical Peel","category":"Skin Treatments","description":"Improve skin texture and tone with our medical-grade chemical peels","duration":60,"price":350,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_005","name":"Microneedling","category":"Skin Treatments","description":"Stimulate collagen production for smoother, younger-looking skin","duration":75,"price":400,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_006","name":"Dermal Fillers","category":"Injectables","description":"Restore volume and enhance facial contours","duration":90,"price":800,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_007","name":"IPL Photofacial","category":"Laser Treatments","description":"Treat sun damage, age spots, and improve skin tone","duration":60,"price":500,"depositRequired":true,"depositPercentage":20,"available":true},{"id":"srv_008","name":"CoolSculpting","category":"Body Contouring","description":"Non-invasive fat reduction treatment","duration":120,"price":1200,"depositRequired":true,"depositPercentage":25,"available":true},{"id":"srv_ae853454","name":"Test Service","category":"Test Category","description":"Test service description","duration":60,"price":299,"depositRequired":true,"depositPercentage":20,"available":true}],"message":"We have 9 services available"}} 
+ 
+[POST] /api/v1/webhook/n8n 
+Body: 
+{ 
+  "action": "getStats", 
+  "data": {} 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"action":"getStats","timestamp":"2025-08-13T17:05:09.831Z","data":{"stats":{"totalBookings":7,"confirmedBookings":4,"pendingBookings":2,"cancelledBookings":1,"totalRevenue":1450,"totalDeposits":450,"popularServices":[{"service":"Botox Treatment","count":2},{"service":"Laser Hair Removal","count":1},{"service":"Hydrafacial","count":1},{"service":"Chemical Peel","count":1},{"service":"Microneedling","count":1}]},"message":"Here are your current statistics"}} 
+ 
+[POST] /api/v1/webhook/n8n 
+Body: 
+{ 
+  "action": "quickBooking", 
+  "data": { 
+    "clientName": "Jane Doe", 
+    "clientEmail": "jane@example.com", 
+    "clientPhone": "+1-555-0200", 
+    "serviceId": "srv_002", 
+    "bookingDate": "2024-12-26", 
+    "bookingTime": "11:00" 
+  } 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"action":"quickBooking","timestamp":"2025-08-13T17:05:10.040Z","data":{"booking":{"id":"16308f2b-1a9b-4e80-8252-f0f9f4bf875a","clientName":"Jane Doe","clientEmail":"jane@example.com","clientPhone":"+1-555-0200","service":"Hydrafacial","serviceId":"srv_002","date":"2024-12-26","time":"11:00","duration":90,"price":250,"depositAmount":50,"depositPaid":false,"status":"pending","notes":"Created via n8n webhook","createdAt":"2025-08-13T17:05:10.040Z","updatedAt":"2025-08-13T17:05:10.040Z"},"message":"Booking created successfully for Jane Doe","depositLink":"http://localhost:3000/api/v1/bookings/16308f2b-1a9b-4e80-8252-f0f9f4bf875a/deposit"}} 
+ 
+[POST] /api/v1/webhook/test 
+Body: 
+{ 
+  "test": "This is a test webhook" 
+} 
+Response: 
+------------------------------------- 
+{"success":true,"message":"Test webhook received successfully","receivedData":{"test":"This is a test webhook"},"timestamp":"2025-08-13T17:05:10.170Z","headers":{"host":"localhost:3000","user-agent":"curl/8.14.1","accept":"*/*","x-api-key":"medspa-demo-api-key-2024","content-type":"application/json","content-length":"33"}} 
+ 
+[POST] /api/v1/bookings/{id}/confirm 
+Body: 
+{ 
+  "depositPaid": true 
+} 
+Response: 
+------------------------------------- 
+Note: Replace {id} with actual booking ID 
+ 
+ 
+[POST] /api/v1/bookings/{id}/cancel 
+Body: 
+{ 
+  "reason": "Client requested cancellation" 
+} 
+Response: 
+------------------------------------- 
+Note: Replace {id} with actual booking ID 
+ 
+ 
+[POST] /api/v1/bookings/{id}/deposit 
+------------------------------------- 
+Note: Replace {id} with actual booking ID 
+ 
+ 
+[PUT] /api/v1/bookings/{id} 
+Body: 
+{ 
+  "notes": "Updated notes for the booking" 
+} 
+Response: 
+------------------------------------- 
+Note: Replace {id} with actual booking ID 
+ 
+ 
+[DELETE] /api/v1/bookings/{id} 
+------------------------------------- 
+Note: Replace {id} with actual booking ID 
+ 
+ 

@@ -1,0 +1,576 @@
+{
+  "info": {
+    "name": "MedSpa Booking API",
+    "description": "Complete API collection for MedSpa AI Receptionist Booking System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "medspa-demo-api-key-2024",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "medspa-demo-api-key-2024",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Documentation",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health"
+          }
+        },
+        {
+          "name": "Welcome",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/"
+          }
+        },
+        {
+          "name": "API Documentation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/docs"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Get All Bookings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/bookings"
+          }
+        },
+        {
+          "name": "Get Bookings (Filtered)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookings?status=confirmed&from=2024-12-20&to=2024-12-22",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bookings"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "confirmed"
+                },
+                {
+                  "key": "from",
+                  "value": "2024-12-20"
+                },
+                {
+                  "key": "to",
+                  "value": "2024-12-22"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Booking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/bookings/:id"
+          }
+        },
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientName\": \"John Smith\",\n  \"clientEmail\": \"john.smith@email.com\",\n  \"clientPhone\": \"+1-555-0199\",\n  \"serviceId\": \"srv_001\",\n  \"date\": \"2024-12-25\",\n  \"time\": \"16:00\",\n  \"notes\": \"First time client\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/bookings"
+          }
+        },
+        {
+          "name": "Update Booking",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"time\": \"17:00\",\n  \"notes\": \"Time changed per client request\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/bookings/:id"
+          }
+        },
+        {
+          "name": "Confirm Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"depositPaid\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/bookings/:id/confirm"
+          }
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Client emergency\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/bookings/:id/cancel"
+          }
+        },
+        {
+          "name": "Process Deposit",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/bookings/:id/deposit"
+          }
+        },
+        {
+          "name": "Delete Booking",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/bookings/:id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Availability",
+      "item": [
+        {
+          "name": "Get Available Slots",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/availability?date=2024-12-20&days=3",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "availability"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2024-12-20"
+                },
+                {
+                  "key": "days",
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check Specific Slot",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/availability/check?date=2024-12-20&time=14:00",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "availability", "check"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2024-12-20"
+                },
+                {
+                  "key": "time",
+                  "value": "14:00"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Business Hours",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/availability/business-hours"
+          }
+        },
+        {
+          "name": "Update Business Hours",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"day\": \"monday\",\n  \"open\": \"08:00\",\n  \"close\": \"19:00\",\n  \"isOpen\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/availability/business-hours"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/services"
+          }
+        },
+        {
+          "name": "Get Services by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/services?category=Injectables",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "services"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Injectables"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/services/srv_001"
+          }
+        },
+        {
+          "name": "Create Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"LED Light Therapy\",\n  \"category\": \"Skin Treatments\",\n  \"description\": \"Non-invasive LED treatment\",\n  \"duration\": 45,\n  \"price\": 150,\n  \"depositRequired\": true,\n  \"depositPercentage\": 20,\n  \"available\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/services"
+          }
+        },
+        {
+          "name": "Update Service",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 175,\n  \"description\": \"Premium LED light therapy treatment\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/services/:id"
+          }
+        },
+        {
+          "name": "Delete Service",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/services/:id"
+          }
+        },
+        {
+          "name": "Get Service Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/services/categories/list"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Statistics",
+      "item": [
+        {
+          "name": "Get General Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/stats"
+          }
+        },
+        {
+          "name": "Get Revenue Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/stats/revenue?groupBy=day&from=2024-12-20&to=2024-12-22",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "stats", "revenue"],
+              "query": [
+                {
+                  "key": "groupBy",
+                  "value": "day"
+                },
+                {
+                  "key": "from",
+                  "value": "2024-12-20"
+                },
+                {
+                  "key": "to",
+                  "value": "2024-12-22"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Service Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/stats/services"
+          }
+        },
+        {
+          "name": "Get Client Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/stats/clients"
+          }
+        },
+        {
+          "name": "Get Dashboard Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/stats/dashboard"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks (n8n)",
+      "item": [
+        {
+          "name": "Get Webhook Actions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/webhook/actions"
+          }
+        },
+        {
+          "name": "Check Availability",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"checkAvailability\",\n  \"data\": {\n    \"date\": \"2024-12-20\",\n    \"time\": \"14:00\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/webhook/n8n"
+          }
+        },
+        {
+          "name": "Get Bookings Count",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"getBookingsCount\",\n  \"data\": {}\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/webhook/n8n"
+          }
+        },
+        {
+          "name": "Get Today Bookings",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"getTodayBookings\",\n  \"data\": {}\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/webhook/n8n"
+          }
+        },
+        {
+          "name": "Get Upcoming Bookings",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"getUpcomingBookings\",\n  \"data\": {}\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/webhook/n8n"
+          }
+        },
+        {
+          "name": "Quick Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"quickBooking\",\n  \"data\": {\n    \"clientName\": \"Alice Williams\",\n    \"clientEmail\": \"alice@example.com\",\n    \"clientPhone\": \"+1-555-0300\",\n    \"serviceId\": \"srv_002\",\n    \"bookingDate\": \"2024-12-27\",\n    \"bookingTime\": \"11:00\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/webhook/n8n"
+          }
+        },
+        {
+          "name": "Get Services",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"getServices\",\n  \"data\": {}\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/webhook/n8n"
+          }
+        },
+        {
+          "name": "Get Stats",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"getStats\",\n  \"data\": {}\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/webhook/n8n"
+          }
+        },
+        {
+          "name": "Test Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"test\": \"This is a test webhook\",\n  \"timestamp\": \"2024-12-19T10:00:00.000Z\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/webhook/test"
+          }
+        }
+      ]
+    }
+  ]
+}
