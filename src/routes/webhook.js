@@ -46,7 +46,7 @@ router.post('/n8n', (req, res) => {
     };
     
     switch (action) {
-      case 'checkAvailability':
+      case 'checkAvailability': {
         const { date, time, serviceId } = data;
         const isAvailable = !mockDatabase.bookings.some(b => 
           b.date === date && 
@@ -111,8 +111,9 @@ router.post('/n8n', (req, res) => {
           };
         }
         break;
+      }
         
-      case 'getBookingsCount':
+      case 'getBookingsCount': {
         const bookingsCount = mockDatabase.bookings.filter(b => 
           b.status === 'confirmed'
         ).length;
@@ -121,8 +122,9 @@ router.post('/n8n', (req, res) => {
           message: `You have ${bookingsCount} confirmed bookings`
         };
         break;
+      }
         
-      case 'getTodayBookings':
+      case 'getTodayBookings': {
         const today = moment().format('YYYY-MM-DD');
         const todayBookings = mockDatabase.bookings.filter(b => 
           b.date === today && b.status === 'confirmed'
@@ -139,8 +141,9 @@ router.post('/n8n', (req, res) => {
           message: `You have ${todayBookings.length} bookings today`
         };
         break;
+      }
         
-      case 'getUpcomingBookings':
+      case 'getUpcomingBookings': {
         const upcoming = mockDatabase.bookings.filter(b => 
           moment(b.date).isAfter(moment()) && 
           b.status === 'confirmed'
@@ -158,12 +161,13 @@ router.post('/n8n', (req, res) => {
           message: `You have ${upcoming.length} upcoming bookings`
         };
         break;
+      }
         
-      case 'quickBooking':
-        const { clientName, clientEmail, clientPhone, serviceId, bookingDate, bookingTime } = data;
+      case 'quickBooking': {
+        const { clientName, clientEmail, clientPhone, serviceId: serviceIdBooking, bookingDate, bookingTime } = data;
         
         // Find service
-        const service = mockDatabase.services.find(s => s.id === serviceId);
+        const service = mockDatabase.services.find(s => s.id === serviceIdBooking);
         if (!service) {
           response.success = false;
           response.error = 'Service not found';
@@ -190,7 +194,7 @@ router.post('/n8n', (req, res) => {
           clientEmail,
           clientPhone,
           service: service.name,
-          serviceId: service.id,
+          serviceId: serviceIdBooking,
           date: bookingDate,
           time: bookingTime,
           duration: service.duration,
@@ -218,23 +222,26 @@ router.post('/n8n', (req, res) => {
           totalPrice: newBooking.price
         };
         break;
+      }
         
-      case 'getServices':
+      case 'getServices': {
         response.data = {
           services: mockDatabase.services.filter(s => s.available),
           message: `We have ${mockDatabase.services.filter(s => s.available).length} services available`
         };
         break;
+      }
         
-      case 'getStats':
+      case 'getStats': {
         updateStats();
         response.data = {
           stats: mockDatabase.stats,
           message: 'Here are your current statistics'
         };
         break;
+      }
         
-      case 'getMyBookings':
+      case 'getMyBookings': {
         const { phoneNumber } = data;
         if (!phoneNumber) {
           response.success = false;
@@ -271,8 +278,9 @@ router.post('/n8n', (req, res) => {
           };
         }
         break;
+      }
         
-      case 'rescheduleBooking':
+      case 'rescheduleBooking': {
         const { phoneNumber: phoneReschedule, bookingCode, newDate, newTime } = data;
         
         if (!phoneReschedule || !bookingCode) {
@@ -332,8 +340,9 @@ router.post('/n8n', (req, res) => {
           success: true
         };
         break;
+      }
         
-      case 'cancelMyBooking':
+      case 'cancelMyBooking': {
         const { phoneNumber: phoneCancel, bookingCode: codeCancel, reason } = data;
         
         if (!phoneCancel || !codeCancel) {
@@ -376,8 +385,9 @@ router.post('/n8n', (req, res) => {
           success: true
         };
         break;
+      }
         
-      case 'confirmDeposit':
+      case 'confirmDeposit': {
         const { phoneNumber: phoneDeposit, bookingCode: codeDeposit } = data;
         
         if (!phoneDeposit || !codeDeposit) {
@@ -421,6 +431,7 @@ router.post('/n8n', (req, res) => {
           success: true
         };
         break;
+      }
         
       default:
         response.success = false;
