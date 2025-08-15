@@ -47,18 +47,69 @@ router.post('/n8n', (req, res) => {
     
     switch (action) {
       case 'checkAvailability':
-        const { date, time } = data;
+        const { date, time, serviceId } = data;
         const isAvailable = !mockDatabase.bookings.some(b => 
           b.date === date && 
           b.time === time && 
           b.status !== 'cancelled'
         );
-        response.data = {
-          available: isAvailable,
-          date,
-          time,
-          message: isAvailable ? 'Slot is available' : 'Slot is already booked'
-        };
+        
+        if (isAvailable) {
+          response.data = {
+            available: true,
+            date,
+            time,
+            message: `Great news! ${date} at ${time} is available.`
+          };
+        } else {
+          // Find alternative slots
+          const alternatives = [];
+          const targetDate = moment(date);
+          const dayOfWeek = targetDate.format('dddd').toLowerCase();
+          const businessHours = mockDatabase.availability.businessHours[dayOfWeek];
+          
+          // Check same day different times
+          const timeSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+          for (const slot of timeSlots) {
+            if (slot !== time && businessHours && businessHours.isOpen) {
+              const slotAvailable = !mockDatabase.bookings.some(b => 
+                b.date === date && 
+                b.time === slot && 
+                b.status !== 'cancelled'
+              );
+              if (slotAvailable && alternatives.length < 3) {
+                alternatives.push({ date, time: slot });
+              }
+            }
+          }
+          
+          // Check next 3 days at the same time
+          for (let i = 1; i <= 3 && alternatives.length < 5; i++) {
+            const nextDate = moment(date).add(i, 'days').format('YYYY-MM-DD');
+            const nextDayOfWeek = moment(nextDate).format('dddd').toLowerCase();
+            const nextBusinessHours = mockDatabase.availability.businessHours[nextDayOfWeek];
+            
+            if (nextBusinessHours && nextBusinessHours.isOpen) {
+              const slotAvailable = !mockDatabase.bookings.some(b => 
+                b.date === nextDate && 
+                b.time === time && 
+                b.status !== 'cancelled'
+              );
+              if (slotAvailable) {
+                alternatives.push({ date: nextDate, time });
+              }
+            }
+          }
+          
+          response.data = {
+            available: false,
+            date,
+            time,
+            alternatives,
+            message: `Sorry, ${date} at ${time} is not available. Here are some alternatives:`,
+            alternativesText: alternatives.map(alt => `${alt.date} at ${alt.time}`).join(', ')
+          };
+        }
         break;
         
       case 'getBookingsCount':
@@ -156,9 +207,15 @@ router.post('/n8n', (req, res) => {
         updateStats();
         
         response.data = {
-          booking: newBooking,
-          message: `Booking created successfully for ${clientName}`,
-          depositLink: `http://localhost:3000/api/v1/bookings/${newBooking.id}/deposit`
+          booking: {
+            ...newBooking,
+            bookingCode: newBooking.id.substring(0, 8).toUpperCase()
+          },
+          bookingCode: newBooking.id.substring(0, 8).toUpperCase(),
+          message: `Perfect! Your ${service.name} is booked for ${bookingDate} at ${bookingTime}. Your booking code is ${newBooking.id.substring(0, 8).toUpperCase()}. Please save this code for future reference.`,
+          depositRequired: !newBooking.depositPaid,
+          depositAmount: newBooking.depositAmount,
+          totalPrice: newBooking.price
         };
         break;
         
@@ -174,6 +231,194 @@ router.post('/n8n', (req, res) => {
         response.data = {
           stats: mockDatabase.stats,
           message: 'Here are your current statistics'
+        };
+        break;
+        
+      case 'getMyBookings':
+        const { phoneNumber } = data;
+        if (!phoneNumber) {
+          response.success = false;
+          response.error = 'Phone number is required';
+          break;
+        }
+        
+        const myBookings = mockDatabase.bookings.filter(b => 
+          b.clientPhone === phoneNumber && 
+          b.status !== 'cancelled'
+        ).sort((a, b) => moment(a.date + ' ' + a.time).diff(moment(b.date + ' ' + b.time)));
+        
+        if (myBookings.length === 0) {
+          response.data = {
+            bookings: [],
+            message: `No bookings found for phone number ${phoneNumber}`,
+            count: 0
+          };
+        } else {
+          response.data = {
+            bookings: myBookings.map(b => ({
+              bookingCode: b.id.substring(0, 8).toUpperCase(),
+              id: b.id,
+              service: b.service,
+              date: b.date,
+              time: b.time,
+              price: b.price,
+              status: b.status,
+              depositPaid: b.depositPaid,
+              clientName: b.clientName
+            })),
+            message: `Found ${myBookings.length} booking(s) for ${myBookings[0].clientName}`,
+            count: myBookings.length
+          };
+        }
+        break;
+        
+      case 'rescheduleBooking':
+        const { phoneNumber: phoneReschedule, bookingCode, newDate, newTime } = data;
+        
+        if (!phoneReschedule || !bookingCode) {
+          response.success = false;
+          response.error = 'Phone number and booking code are required';
+          break;
+        }
+        
+        // Find the booking
+        const bookingToReschedule = mockDatabase.bookings.find(b => 
+          b.clientPhone === phoneReschedule && 
+          b.id.substring(0, 8).toUpperCase() === bookingCode.toUpperCase() &&
+          b.status !== 'cancelled'
+        );
+        
+        if (!bookingToReschedule) {
+          response.success = false;
+          response.error = 'Booking not found or already cancelled';
+          break;
+        }
+        
+        // Check new slot availability
+        const newSlotTaken = mockDatabase.bookings.some(b => 
+          b.date === newDate && 
+          b.time === newTime && 
+          b.status !== 'cancelled' &&
+          b.id !== bookingToReschedule.id
+        );
+        
+        if (newSlotTaken) {
+          response.success = false;
+          response.error = `The slot ${newDate} at ${newTime} is not available`;
+          break;
+        }
+        
+        // Update the booking
+        const oldDate = bookingToReschedule.date;
+        const oldTime = bookingToReschedule.time;
+        bookingToReschedule.date = newDate;
+        bookingToReschedule.time = newTime;
+        bookingToReschedule.updatedAt = new Date().toISOString();
+        bookingToReschedule.notes = `Rescheduled from ${oldDate} at ${oldTime}. ${bookingToReschedule.notes || ''}`;
+        
+        updateStats();
+        
+        response.data = {
+          booking: {
+            bookingCode: bookingToReschedule.id.substring(0, 8).toUpperCase(),
+            service: bookingToReschedule.service,
+            oldDate,
+            oldTime,
+            newDate,
+            newTime,
+            clientName: bookingToReschedule.clientName
+          },
+          message: `Successfully rescheduled your ${bookingToReschedule.service} from ${oldDate} at ${oldTime} to ${newDate} at ${newTime}`,
+          success: true
+        };
+        break;
+        
+      case 'cancelMyBooking':
+        const { phoneNumber: phoneCancel, bookingCode: codeCancel, reason } = data;
+        
+        if (!phoneCancel || !codeCancel) {
+          response.success = false;
+          response.error = 'Phone number and booking code are required';
+          break;
+        }
+        
+        // Find the booking
+        const bookingToCancel = mockDatabase.bookings.find(b => 
+          b.clientPhone === phoneCancel && 
+          b.id.substring(0, 8).toUpperCase() === codeCancel.toUpperCase() &&
+          b.status !== 'cancelled'
+        );
+        
+        if (!bookingToCancel) {
+          response.success = false;
+          response.error = 'Booking not found or already cancelled';
+          break;
+        }
+        
+        // Cancel the booking
+        bookingToCancel.status = 'cancelled';
+        bookingToCancel.cancelledAt = new Date().toISOString();
+        bookingToCancel.updatedAt = new Date().toISOString();
+        bookingToCancel.cancellationReason = reason || 'Cancelled by client via chat';
+        
+        updateStats();
+        
+        response.data = {
+          booking: {
+            bookingCode: bookingToCancel.id.substring(0, 8).toUpperCase(),
+            service: bookingToCancel.service,
+            date: bookingToCancel.date,
+            time: bookingToCancel.time,
+            clientName: bookingToCancel.clientName
+          },
+          message: `Your ${bookingToCancel.service} appointment on ${bookingToCancel.date} at ${bookingToCancel.time} has been cancelled`,
+          refundInfo: bookingToCancel.depositPaid ? 'Your deposit will be refunded within 3-5 business days' : 'No deposit was paid',
+          success: true
+        };
+        break;
+        
+      case 'confirmDeposit':
+        const { phoneNumber: phoneDeposit, bookingCode: codeDeposit } = data;
+        
+        if (!phoneDeposit || !codeDeposit) {
+          response.success = false;
+          response.error = 'Phone number and booking code are required';
+          break;
+        }
+        
+        // Find the booking
+        const bookingToConfirm = mockDatabase.bookings.find(b => 
+          b.clientPhone === phoneDeposit && 
+          b.id.substring(0, 8).toUpperCase() === codeDeposit.toUpperCase() &&
+          b.status !== 'cancelled'
+        );
+        
+        if (!bookingToConfirm) {
+          response.success = false;
+          response.error = 'Booking not found or cancelled';
+          break;
+        }
+        
+        // Mark deposit as paid and confirm booking
+        bookingToConfirm.depositPaid = true;
+        bookingToConfirm.depositPaidAt = new Date().toISOString();
+        bookingToConfirm.status = 'confirmed';
+        bookingToConfirm.updatedAt = new Date().toISOString();
+        
+        updateStats();
+        
+        response.data = {
+          booking: {
+            bookingCode: bookingToConfirm.id.substring(0, 8).toUpperCase(),
+            service: bookingToConfirm.service,
+            date: bookingToConfirm.date,
+            time: bookingToConfirm.time,
+            depositAmount: bookingToConfirm.depositAmount,
+            totalPrice: bookingToConfirm.price,
+            clientName: bookingToConfirm.clientName
+          },
+          message: `Perfect! Your deposit of ${bookingToConfirm.depositAmount} has been confirmed. Your ${bookingToConfirm.service} is booked for ${bookingToConfirm.date} at ${bookingToConfirm.time}`,
+          success: true
         };
         break;
         
@@ -283,6 +528,56 @@ router.get('/actions', (req, res) => {
         example: {
           action: 'getStats',
           data: {}
+        }
+      },
+      {
+        action: 'getMyBookings',
+        description: 'Get all bookings for a phone number',
+        requiredFields: ['phoneNumber'],
+        example: {
+          action: 'getMyBookings',
+          data: {
+            phoneNumber: '+1-555-0101'
+          }
+        }
+      },
+      {
+        action: 'rescheduleBooking',
+        description: 'Reschedule an existing booking',
+        requiredFields: ['phoneNumber', 'bookingCode', 'newDate', 'newTime'],
+        example: {
+          action: 'rescheduleBooking',
+          data: {
+            phoneNumber: '+1-555-0101',
+            bookingCode: 'ABC12345',
+            newDate: '2024-12-28',
+            newTime: '15:00'
+          }
+        }
+      },
+      {
+        action: 'cancelMyBooking',
+        description: 'Cancel a booking using phone and booking code',
+        requiredFields: ['phoneNumber', 'bookingCode'],
+        example: {
+          action: 'cancelMyBooking',
+          data: {
+            phoneNumber: '+1-555-0101',
+            bookingCode: 'ABC12345',
+            reason: 'Need to reschedule'
+          }
+        }
+      },
+      {
+        action: 'confirmDeposit',
+        description: 'Confirm deposit payment for a booking',
+        requiredFields: ['phoneNumber', 'bookingCode'],
+        example: {
+          action: 'confirmDeposit',
+          data: {
+            phoneNumber: '+1-555-0101',
+            bookingCode: 'ABC12345'
+          }
         }
       }
     ],

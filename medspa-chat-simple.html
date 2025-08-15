@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedSpa Chat - Simple Test</title>
+    
+    <!-- n8n Chat CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .info {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        .webhook-config {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #764ba2;
+        }
+        
+        code {
+            background: #e0e0e0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .test-queries {
+            margin-top: 20px;
+        }
+        
+        .test-queries li {
+            margin: 10px 0;
+        }
+        
+        /* MedSpa Chat Theme */
+        :root {
+            --chat--color-primary: #764ba2;
+            --chat--color-primary-shade-50: #6a4391;
+            --chat--color-secondary: #00b894;
+            --chat--toggle--background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --chat--toggle--size: 70px;
+            --chat--window--width: 400px;
+            --chat--window--height: 600px;
+            --chat--border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h1>🏥 MedSpa AI Chat - Test Page</h1>
+        
+        <div class="webhook-config">
+            <h3>⚠️ Configuration Required:</h3>
+            <p>Replace <code>YOUR_N8N_WEBHOOK_URL</code> in the source code with your actual n8n webhook URL</p>
+            <p>Example: <code>https://your-instance.app.n8n.cloud/webhook/xxxxx-xxxxx</code></p>
+        </div>
+        
+        <h2>📝 Test Queries:</h2>
+        <ul class="test-queries">
+            <li><strong>General Info:</strong> "What are your hours?"</li>
+            <li><strong>Services:</strong> "What services do you offer?"</li>
+            <li><strong>Booking:</strong> "I want to book a Botox treatment"</li>
+            <li><strong>Availability:</strong> "Do you have availability tomorrow at 2pm?"</li>
+            <li><strong>Pricing:</strong> "How much does Hydrafacial cost?"</li>
+            <li><strong>Schedule:</strong> "Show me today's appointments"</li>
+            <li><strong>Location:</strong> "Where are you located?"</li>
+        </ul>
+        
+        <h2>🔗 Backend Endpoints:</h2>
+        <ul>
+            <li>API Base: <a href="https://medspa.up.railway.app" target="_blank">https://medspa.up.railway.app</a></li>
+            <li>Health Check: <a href="https://medspa.up.railway.app/health" target="_blank">/health</a></li>
+            <li>API Docs: <a href="https://medspa.up.railway.app/api/v1/docs" target="_blank">/api/v1/docs</a></li>
+        </ul>
+        
+        <p style="margin-top: 30px; color: #666;">
+            💬 The chat widget will appear in the bottom-right corner. Click it to start testing!
+        </p>
+    </div>
+    
+    <!-- Chat Widget Container -->
+    <div id="n8n-chat"></div>
+    
+    <!-- n8n Chat Script -->
+    <script type="module">
+        import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+        
+        // ⚠️ REPLACE THIS WITH YOUR ACTUAL N8N WEBHOOK URL ⚠️
+        const WEBHOOK_URL = 'https://fmanr96.app.n8n.cloud/webhook/53457fb1-5d58-4aac-b6b9-9062e10476ba/chat';
+        
+        createChat({
+            webhookUrl: WEBHOOK_URL,
+            mode: 'window',
+            showWelcomeScreen: true,
+            initialMessages: [
+                'Welcome to Luxe MedSpa! 🌟',
+                "I'm Bella, your AI receptionist. How can I help you today?"
+            ],
+            i18n: {
+                en: {
+                    title: 'Luxe MedSpa',
+                    subtitle: "24/7 AI Receptionist",
+                    footer: '',
+                    getStarted: 'Start Chat',
+                    inputPlaceholder: 'Type your message...',
+                },
+            },
+        });
+    </script>
+</body>
+</html>
