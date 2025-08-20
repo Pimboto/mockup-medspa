@@ -121,7 +121,7 @@ const mockDatabase = {
       description: "Reduce fine lines and wrinkles with our premium Botox treatment",
       duration: 60,
       price: 450,
-      depositRequired: true,
+      depositRequired: false,
       depositPercentage: 20,
       available: true
     },
@@ -132,7 +132,7 @@ const mockDatabase = {
       description: "Deep cleanse, exfoliate, and hydrate your skin",
       duration: 90,
       price: 250,
-      depositRequired: true,
+      depositRequired: false,
       depositPercentage: 20,
       available: true
     },
@@ -143,7 +143,7 @@ const mockDatabase = {
       description: "Permanent hair reduction using state-of-the-art laser technology",
       duration: 120,
       price: 600,
-      depositRequired: true,
+      depositRequired: false,
       depositPercentage: 20,
       available: true
     },
@@ -154,7 +154,7 @@ const mockDatabase = {
       description: "Improve skin texture and tone with our medical-grade chemical peels",
       duration: 60,
       price: 350,
-      depositRequired: true,
+      depositRequired: false,
       depositPercentage: 20,
       available: true
     },
@@ -165,7 +165,7 @@ const mockDatabase = {
       description: "Stimulate collagen production for smoother, younger-looking skin",
       duration: 75,
       price: 400,
-      depositRequired: true,
+      depositRequired: false,
       depositPercentage: 20,
       available: true
     },
@@ -176,7 +176,7 @@ const mockDatabase = {
       description: "Restore volume and enhance facial contours",
       duration: 90,
       price: 800,
-      depositRequired: true,
+      depositRequired: false,
       depositPercentage: 20,
       available: true
     },
@@ -187,7 +187,7 @@ const mockDatabase = {
       description: "Treat sun damage, age spots, and improve skin tone",
       duration: 60,
       price: 500,
-      depositRequired: true,
+      depositRequired: false,
       depositPercentage: 20,
       available: true
     },
@@ -198,7 +198,7 @@ const mockDatabase = {
       description: "Non-invasive fat reduction treatment",
       duration: 120,
       price: 1200,
-      depositRequired: true,
+      depositRequired: false,
       depositPercentage: 25,
       available: true
     }
