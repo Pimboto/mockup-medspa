@@ -115,92 +115,135 @@ const mockDatabase = {
   ],
   services: [
     {
-      id: "srv_001",
-      name: "Botox Treatment",
-      category: "Injectables",
-      description: "Reduce fine lines and wrinkles with our premium Botox treatment",
-      duration: 60,
-      price: 450,
-      depositRequired: false,
-      depositPercentage: 20,
-      available: true
-    },
-    {
-      id: "srv_002",
-      name: "Hydrafacial",
-      category: "Facials",
-      description: "Deep cleanse, exfoliate, and hydrate your skin",
-      duration: 90,
-      price: 250,
-      depositRequired: false,
-      depositPercentage: 20,
-      available: true
-    },
-    {
-      id: "srv_003",
-      name: "Laser Hair Removal",
-      category: "Laser Treatments",
-      description: "Permanent hair reduction using state-of-the-art laser technology",
-      duration: 120,
-      price: 600,
-      depositRequired: false,
-      depositPercentage: 20,
-      available: true
-    },
-    {
-      id: "srv_004",
-      name: "Chemical Peel",
-      category: "Skin Treatments",
-      description: "Improve skin texture and tone with our medical-grade chemical peels",
-      duration: 60,
-      price: 350,
-      depositRequired: false,
-      depositPercentage: 20,
-      available: true
-    },
-    {
-      id: "srv_005",
-      name: "Microneedling",
-      category: "Skin Treatments",
-      description: "Stimulate collagen production for smoother, younger-looking skin",
-      duration: 75,
-      price: 400,
-      depositRequired: false,
-      depositPercentage: 20,
-      available: true
-    },
-    {
-      id: "srv_006",
-      name: "Dermal Fillers",
-      category: "Injectables",
-      description: "Restore volume and enhance facial contours",
-      duration: 90,
-      price: 800,
-      depositRequired: false,
-      depositPercentage: 20,
-      available: true
-    },
-    {
-      id: "srv_007",
-      name: "IPL Photofacial",
-      category: "Laser Treatments",
-      description: "Treat sun damage, age spots, and improve skin tone",
-      duration: 60,
-      price: 500,
-      depositRequired: false,
-      depositPercentage: 20,
-      available: true
-    },
-    {
-      id: "srv_008",
-      name: "CoolSculpting",
-      category: "Body Contouring",
-      description: "Non-invasive fat reduction treatment",
-      duration: 120,
-      price: 1200,
-      depositRequired: false,
-      depositPercentage: 25,
-      available: true
+      "id": "srv_003",
+      "name": "Laser Hair Removal",
+      "category": "Laser Treatments",
+      "shortDescription": "Permanent hair reduction with medical-grade laser.",
+      "longDescription": "Targets hair follicles to reduce growth. Safe for most skin types with minimal downtime.",
+      "media": {
+        "coverImageUrl": "",
+        "galleryIds": []
+      },
+
+      "pricing": {
+        "currency": "USD",
+        "pricingModel": "PER_AREA",
+        "basePrice": null,
+        "areas": [
+          { "id": "area_small_upper_lip", "name": "Upper Lip", "price": 90 },
+          { "id": "area_small_chin", "name": "Chin", "price": 110 },
+          { "id": "area_medium_underarms", "name": "Underarms", "price": 180 },
+          { "id": "area_medium_bikini", "name": "Bikini", "price": 220 },
+          { "id": "area_large_legs", "name": "Full Legs", "price": 520 },
+          { "id": "area_large_back", "name": "Back", "price": 600 }
+        ],
+        "packages": [
+          {
+            "id": "pkg_series6",
+            "name": "Series of 6",
+            "appliesTo": "AREAS",
+            "discountType": "PERCENT",
+            "discountValue": 15,
+            "sessions": 6,
+            "transferable": false,
+            "expirationDays": 365
+          },
+          {
+            "id": "pkg_series8",
+            "name": "Series of 8",
+            "appliesTo": "AREAS",
+            "discountType": "PERCENT",
+            "discountValue": 22,
+            "sessions": 8,
+            "transferable": false,
+            "expirationDays": 540
+          }
+        ],
+        "membershipAdjustments": [
+          { "membershipId": "mbr_glow", "type": "PERCENT", "value": 10 }
+        ],
+        "providerLevelAdjustments": [
+          { "level": "RN", "type": "PERCENT", "value": 0 },
+          { "level": "NP", "type": "PERCENT", "value": 10 }
+        ],
+        "taxable": true
+      },
+
+      "booking": {
+        "durationMinutes": 30,
+        "durationPerAdditionalArea": 10,
+        "prepBufferMinutes": 5,
+        "cleanupBufferMinutes": 5,
+        "leadTimeHoursMin": 2,
+        "cancellationPolicyId": "can_24h",
+        "deposit": {
+          "required": true,
+          "type": "PERCENT",
+          "value": 20,
+          "appliesTo": "ORDER",
+          "refundableWindowHours": 24
+        },
+        "onlineBookable": true,
+        "maxGuests": 1
+      },
+
+      "clinical": {
+        "device": "Diode 810nm (e.g., Lumenis)",
+        "skinTypes": "Fitzpatrick I–V",
+        "sessionsRecommendedMin": 6,
+        "sessionsRecommendedMax": 8,
+        "sessionCadenceDaysMin": 28,
+        "expectedDowntime": "None to mild redness for a few hours",
+        "contraindications": [
+          "Recent sun exposure or tanning",
+          "Active skin infection or open wounds in treatment area",
+          "Photosensitizing medications"
+        ],
+        "preCare": [
+          "Shave treatment area 24 hours prior",
+          "Avoid sun exposure and self-tanner for 2 weeks"
+        ],
+        "postCare": [
+          "Apply SPF 30+ daily",
+          "Avoid hot tubs/saunas for 24–48 hours"
+        ],
+        "followUpNeeded": false
+      },
+
+      "availability": {
+        "locations": [
+          { "id": "loc_lake_worth", "enabled": true },
+          { "id": "loc_royal_palm", "enabled": false }
+        ],
+        "resources": [
+          { "type": "MACHINE", "id": "laser_01" },
+          { "type": "ROOM", "id": "room_laser_a" }
+        ],
+        "providerLevelsAllowed": ["RN", "NP"]
+      },
+
+      "commerce": {
+        "sku": "LHR",
+        "upsells": [
+          { "serviceId": "srv_007", "label": "Add IPL for discoloration", "position": "POST_BOOK" },
+          { "addonId": "adn_numbing", "label": "Topical numbing" }
+        ],
+        "addons": [
+          { "id": "adn_numbing", "name": "Topical numbing", "price": 25, "durationMinutes": 10 },
+          { "id": "adn_neck", "name": "Add Neck", "price": 95, "durationMinutes": 10 }
+        ],
+        "giftCardEligible": true
+      },
+
+      "compliance": {
+        "consentFormId": "consent_laser",
+        "hipaaSensitive": true
+      },
+
+      "status": { "available": true, "visible": true },
+      "seo": { "slug": "laser-hair-removal", "keywords": ["laser hair removal","permanent hair reduction"] },
+      "i18n": { "defaultLocale": "en-US", "supported": ["en-US","es-ES"] },
+      "version": 2
     }
   ],
   availability: {
