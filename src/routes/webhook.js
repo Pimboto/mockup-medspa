@@ -187,6 +187,16 @@ router.post('/n8n', (req, res) => {
           break;
         }
         
+        // For the new service structure, we'll use default values for quick booking
+        // In a real implementation, you'd need to specify which areas/packages to book
+        const defaultDuration = service.booking ? service.booking.durationMinutes : 60;
+        const defaultPrice = service.pricing && service.pricing.areas && service.pricing.areas.length > 0 
+          ? service.pricing.areas[0].price 
+          : 200; // fallback price
+        const depositPercentage = service.booking && service.booking.deposit 
+          ? service.booking.deposit.value 
+          : 20;
+
         // Create booking
         const newBooking = {
           id: uuidv4(),
@@ -197,9 +207,9 @@ router.post('/n8n', (req, res) => {
           serviceId: serviceIdBooking,
           date: bookingDate,
           time: bookingTime,
-          duration: service.duration,
-          price: service.price,
-          depositAmount: Math.round(service.price * (service.depositPercentage / 100)),
+          duration: defaultDuration,
+          price: defaultPrice,
+          depositAmount: Math.round(defaultPrice * (depositPercentage / 100)),
           depositPaid: false,
           status: 'pending',
           notes: 'Created via n8n webhook',
@@ -226,8 +236,8 @@ router.post('/n8n', (req, res) => {
         
       case 'getServices': {
         response.data = {
-          services: mockDatabase.services.filter(s => s.available),
-          message: `We have ${mockDatabase.services.filter(s => s.available).length} services available`
+          services: mockDatabase.services.filter(s => s.status && s.status.available),
+          message: `We have ${mockDatabase.services.filter(s => s.status && s.status.available).length} services available`
         };
         break;
       }
