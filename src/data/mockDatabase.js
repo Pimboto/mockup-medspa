@@ -163,7 +163,7 @@ const mockDatabase = {
         "leadTimeHoursMin": 2,
         "cancellationPolicyId": "can_24h",
         "deposit": {
-          "required": true,
+          "required": false,
           "type": "PERCENT",
           "value": 20,
           "appliesTo": "ORDER",
@@ -259,7 +259,7 @@ const mockDatabase = {
         "leadTimeHoursMin": 2,
         "cancellationPolicyId": "can_24h",
         "deposit": {
-          "required": true,
+          "required": false,
           "type": "PERCENT",
           "value": 20,
           "appliesTo": "ORDER",
@@ -376,7 +376,7 @@ const mockDatabase = {
         "leadTimeHoursMin": 2,
         "cancellationPolicyId": "can_24h",
         "deposit": {
-          "required": true,
+          "required": false,
           "type": "PERCENT",
           "value": 20,
           "appliesTo": "ORDER",
@@ -486,7 +486,7 @@ const mockDatabase = {
         "leadTimeHoursMin": 2,
         "cancellationPolicyId": "can_24h",
         "deposit": {
-          "required": true,
+          "required": false,
           "type": "PERCENT",
           "value": 20,
           "appliesTo": "ORDER",
@@ -581,7 +581,7 @@ const mockDatabase = {
         "leadTimeHoursMin": 2,
         "cancellationPolicyId": "can_24h",
         "deposit": {
-          "required": true,
+          "required": false,
           "type": "PERCENT",
           "value": 20,
           "appliesTo": "ORDER",
@@ -678,7 +678,7 @@ const mockDatabase = {
         "leadTimeHoursMin": 2,
         "cancellationPolicyId": "can_24h",
         "deposit": {
-          "required": true,
+          "required": false,
           "type": "PERCENT",
           "value": 20,
           "appliesTo": "ORDER",
@@ -783,7 +783,7 @@ const mockDatabase = {
         "leadTimeHoursMin": 2,
         "cancellationPolicyId": "can_24h",
         "deposit": {
-          "required": true,
+          "required": false,
           "type": "PERCENT",
           "value": 20,
           "appliesTo": "ORDER",
@@ -884,7 +884,7 @@ const mockDatabase = {
         "leadTimeHoursMin": 4,
         "cancellationPolicyId": "can_48h",
         "deposit": {
-          "required": true,
+          "required": false,
           "type": "PERCENT",
           "value": 25,
           "appliesTo": "ORDER",
