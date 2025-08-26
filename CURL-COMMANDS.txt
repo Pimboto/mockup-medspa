@@ -1,0 +1,95 @@
+# MEDSPA CALENDLY API - COMANDOS CURL REALES
+# Todos en UNA SOLA LÍNEA para copiar y pegar
+# =============================================
+
+# 1. CHECK STATUS (VERIFICA CONEXIÓN)
+curl http://localhost:3000/
+
+# 2. GET ALL SERVICES (13 servicios del JSON)
+curl http://localhost:3000/api/services
+
+# 3. GET SERVICE CATEGORIES
+curl http://localhost:3000/api/services/categories
+
+# 4. GET SINGLE SERVICE - BOTOX
+curl http://localhost:3000/api/services/srv_001
+
+# 5. GET SINGLE SERVICE - HYDRAFACIAL
+curl http://localhost:3000/api/services/srv_003
+
+# 6. GET SERVICES BY CATEGORY - INJECTABLES
+curl "http://localhost:3000/api/services?category=Injectables"
+
+# 7. GET SERVICES BY CATEGORY - FACIALS
+curl "http://localhost:3000/api/services?category=Facials"
+
+# 8. GET SERVICES BY CATEGORY - LASER TREATMENTS
+curl "http://localhost:3000/api/services?category=Laser%20Treatments"
+
+# 9. GET YOUR CALENDLY USER INFO (Maverick Health Agents)
+curl http://localhost:3000/api/calendly/user
+
+# 10. GET YOUR CALENDLY EVENT TYPES (tienes 3)
+curl http://localhost:3000/api/calendly/event-types
+
+# 11. CHECK AVAILABILITY FROM CALENDLY (MedSpa Demo Call)
+curl http://localhost:3000/api/availability
+
+# 12. CHECK AVAILABILITY FOR SPECIFIC DATE
+curl "http://localhost:3000/api/availability?date=2025-01-31"
+
+# 13. GET ALL YOUR SCHEDULED EVENTS FROM CALENDLY
+curl http://localhost:3000/api/bookings
+
+# 14. GET BOOKINGS BY EMAIL
+curl "http://localhost:3000/api/bookings?email=admin@maverickhealthagents.com"
+
+# 15. CREATE BOOKING - BOTOX SERVICE ($260)
+curl -X POST http://localhost:3000/api/bookings -H "Content-Type: application/json" -d "{\"userName\":\"Jennifer Smith\",\"userEmail\":\"jennifer@example.com\",\"userPhone\":\"305-555-1234\",\"serviceId\":\"srv_001\",\"notes\":\"First time client for Botox\"}"
+
+# 16. CREATE BOOKING - HYDRAFACIAL SERVICE ($250)
+curl -X POST http://localhost:3000/api/bookings -H "Content-Type: application/json" -d "{\"userName\":\"Maria Garcia\",\"userEmail\":\"maria@example.com\",\"userPhone\":\"305-555-5678\",\"serviceId\":\"srv_003\",\"notes\":\"Monthly facial treatment\"}"
+
+# 17. CREATE BOOKING - DERMAL FILLERS ($800)
+curl -X POST http://localhost:3000/api/bookings -H "Content-Type: application/json" -d "{\"userName\":\"Sarah Johnson\",\"userEmail\":\"sarah@example.com\",\"userPhone\":\"305-555-9012\",\"serviceId\":\"srv_002\",\"notes\":\"Lip fillers consultation\"}"
+
+# 18. CREATE BOOKING - LASER HAIR SMALL AREA ($90)
+curl -X POST http://localhost:3000/api/bookings -H "Content-Type: application/json" -d "{\"userName\":\"Emily Davis\",\"userEmail\":\"emily@example.com\",\"userPhone\":\"305-555-3456\",\"serviceId\":\"srv_004\",\"notes\":\"Upper lip laser hair removal\"}"
+
+# 19. CREATE BOOKING - IPL PHOTOFACIAL ($500)
+curl -X POST http://localhost:3000/api/bookings -H "Content-Type: application/json" -d "{\"userName\":\"Ashley Martinez\",\"userEmail\":\"ashley@example.com\",\"userPhone\":\"305-555-7890\",\"serviceId\":\"srv_007\",\"notes\":\"Sun damage treatment\"}"
+
+# 20. CREATE BOOKING - MICRONEEDLING ($400)
+curl -X POST http://localhost:3000/api/bookings -H "Content-Type: application/json" -d "{\"userName\":\"Jessica Wilson\",\"userEmail\":\"jessica@example.com\",\"userPhone\":\"305-555-2345\",\"serviceId\":\"srv_010\",\"notes\":\"Acne scars treatment\"}"
+
+# 21. CREATE BOOKING - CHEMICAL PEEL LIGHT ($250)
+curl -X POST http://localhost:3000/api/bookings -H "Content-Type: application/json" -d "{\"userName\":\"Nicole Brown\",\"userEmail\":\"nicole@example.com\",\"userPhone\":\"305-555-6789\",\"serviceId\":\"srv_008\",\"notes\":\"Sensitive skin\"}"
+
+# 22. CREATE BOOKING - COOLSCULPTING SINGLE AREA ($600)
+curl -X POST http://localhost:3000/api/bookings -H "Content-Type: application/json" -d "{\"userName\":\"Michelle Taylor\",\"userEmail\":\"michelle@example.com\",\"userPhone\":\"305-555-0123\",\"serviceId\":\"srv_012\",\"notes\":\"Abdomen area treatment\"}"
+
+# 23. TEST ERROR - INVALID SERVICE ID (should fail)
+curl -X POST http://localhost:3000/api/bookings -H "Content-Type: application/json" -d "{\"userName\":\"Test Error\",\"userEmail\":\"error@test.com\",\"userPhone\":\"305-555-0000\",\"serviceId\":\"invalid_service_id\",\"notes\":\"This should return error\"}"
+
+# 24. TEST ERROR - MISSING REQUIRED FIELDS (should fail)
+curl -X POST http://localhost:3000/api/bookings -H "Content-Type: application/json" -d "{\"userName\":\"Incomplete Data\"}"
+
+# =============================================
+# PARA CANCELAR UN BOOKING (necesitas el EVENT ID de Calendly)
+# =============================================
+
+# Primero obtén los bookings para ver los IDs:
+curl http://localhost:3000/api/bookings
+
+# Luego cancela con el ID real (ejemplo):
+# curl -X DELETE http://localhost:3000/api/bookings/REAL_EVENT_ID -H "Content-Type: application/json" -d "{\"reason\":\"Client requested cancellation\"}"
+
+# =============================================
+# NOTAS IMPORTANTES:
+# =============================================
+# 1. Tu Calendly está configurado con "MedSpa Demo Call (45 min)"
+# 2. Los bookings crean un link único de Calendly
+# 3. El cliente debe ir al link para seleccionar la hora
+# 4. Tienes 1 evento próximo en tu Calendly
+# 5. Todos los servicios vienen de src/data/services.json
+# =============================================
