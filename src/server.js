@@ -191,6 +191,7 @@ app.get('/', (req, res) => {
       services: '/api/services',
       availability: '/api/availability',
       bookings: '/api/bookings',
+      bookingLink: '/api/booking-link',
       calendly: {
         eventTypes: '/api/calendly/event-types',
         user: '/api/calendly/user'
@@ -269,17 +270,52 @@ app.get('/api/availability', async (req, res) => {
   }
   
   try {
-    const startTime = req.query.date || new Date().toISOString();
-    const endTime = new Date(new Date(startTime).getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
+    // Validate that we have an event type URI
+    const eventTypeUri = process.env.CALENDLY_EVENT_TYPE_URI || calendlyEventTypes[0]?.uri;
+    
+    if (!eventTypeUri) {
+      return res.json({
+        success: false,
+        error: 'No event type configured',
+        message: 'Please configure CALENDLY_EVENT_TYPE_URI in .env file or create an event type in Calendly',
+        availableEventTypes: calendlyEventTypes.map(et => ({
+          uri: et.uri,
+          name: et.name,
+          duration: et.duration
+        }))
+      });
+    }
+    
+    // Parse and validate date
+    const requestedDate = req.query.date || new Date().toISOString();
+    const startTime = new Date(requestedDate);
+    
+    if (isNaN(startTime.getTime())) {
+      return res.json({
+        success: false,
+        error: 'Invalid date format',
+        message: 'Please provide date in ISO format (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ssZ)',
+        example: new Date().toISOString()
+      });
+    }
+    
+    // Calculate end time (7 days from start)
+    const endTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000);
+    
+    console.log('Fetching availability:', {
+      eventType: eventTypeUri,
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString()
+    });
     
     const response = await axios.get(
       `${CALENDLY_API_BASE}/event_type_available_times`,
       {
         headers: calendlyHeaders,
         params: {
-          event_type: process.env.CALENDLY_EVENT_TYPE_URI || calendlyEventTypes[0]?.uri,
-          start_time: startTime,
-          end_time: endTime
+          event_type: eventTypeUri,
+          start_time: startTime.toISOString(),
+          end_time: endTime.toISOString()
         }
       }
     );
@@ -287,13 +323,20 @@ app.get('/api/availability', async (req, res) => {
     res.json({
       success: true,
       source: 'calendly',
+      dateRange: {
+        start: startTime.toISOString(),
+        end: endTime.toISOString()
+      },
       availableTimes: response.data.collection || []
     });
     
   } catch (error) {
+    console.error('Availability error:', error.response?.data || error.message);
+    
     res.json({
       success: false,
       error: error.response?.data?.message || error.message,
+      details: error.response?.data?.details || 'Check server logs for more information',
       availableTimes: []
     });
   }
@@ -315,8 +358,16 @@ app.get('/api/bookings', async (req, res) => {
       sort: 'start_time:desc'
     };
     
+    // Filter by email if provided
     if (req.query.email) {
       params.invitee_email = req.query.email;
+      console.log(`Filtering bookings for email: ${req.query.email}`);
+    }
+    
+    // Filter by phone if provided
+    if (req.query.phone) {
+      // Note: Calendly doesn't have direct phone filtering, we'll filter after fetching
+      console.log(`Will filter bookings for phone: ${req.query.phone}`);
     }
     
     const response = await axios.get(
@@ -327,26 +378,172 @@ app.get('/api/bookings', async (req, res) => {
       }
     );
     
-    const bookings = response.data.collection.map(event => ({
-      id: event.uri.split('/').pop(),
-      name: event.name,
-      startTime: event.start_time,
-      endTime: event.end_time,
-      status: event.status,
-      location: event.location?.location || 'TBD'
-    }));
+    // Get invitee details for each event
+    const bookingsWithDetails = await Promise.all(
+      response.data.collection.map(async (event) => {
+        try {
+          // Get invitees for this event
+          const inviteesResponse = await axios.get(
+            event.uri + '/invitees',
+            { headers: calendlyHeaders }
+          );
+          
+          const invitee = inviteesResponse.data.collection[0];
+          
+          const booking = {
+            id: event.uri.split('/').pop(),
+            name: event.name,
+            startTime: event.start_time,
+            endTime: event.end_time,
+            status: event.status,
+            location: event.location?.location || 'TBD',
+            invitee: {
+              name: invitee?.name || 'Unknown',
+              email: invitee?.email || 'Unknown',
+              phone: invitee?.text_reminder_number || 'Not provided'
+            }
+          };
+          
+          // Filter by phone if requested
+          if (req.query.phone && invitee?.text_reminder_number !== req.query.phone) {
+            return null;
+          }
+          
+          return booking;
+        } catch (err) {
+          console.error('Error fetching invitee details:', err.message);
+          return {
+            id: event.uri.split('/').pop(),
+            name: event.name,
+            startTime: event.start_time,
+            endTime: event.end_time,
+            status: event.status,
+            location: event.location?.location || 'TBD',
+            invitee: {
+              name: 'Error loading',
+              email: 'Error loading',
+              phone: 'Error loading'
+            }
+          };
+        }
+      })
+    );
+    
+    // Filter out nulls (from phone filtering)
+    const bookings = bookingsWithDetails.filter(booking => booking !== null);
     
     res.json({
       success: true,
       total: bookings.length,
+      filters: {
+        email: req.query.email || null,
+        phone: req.query.phone || null
+      },
       bookings
     });
     
   } catch (error) {
+    console.error('Bookings error:', error.response?.data || error.message);
     res.json({
       success: false,
       error: error.response?.data?.message || error.message,
       bookings: []
+    });
+  }
+});
+
+// Create a personalized booking link
+app.get('/api/booking-link', async (req, res) => {
+  const { name, email, phone, serviceId, notes } = req.query;
+  
+  // Validate required parameters
+  if (!name || !email) {
+    return res.status(400).json({
+      success: false,
+      error: 'Missing required parameters',
+      required: ['name', 'email'],
+      optional: ['phone', 'serviceId', 'notes']
+    });
+  }
+  
+  try {
+    // Get service details if serviceId provided
+    let service = null;
+    if (serviceId) {
+      service = servicesData.services.find(s => s.id === serviceId);
+      if (!service) {
+        return res.status(404).json({ 
+          success: false,
+          error: 'Service not found' 
+        });
+      }
+    }
+    
+    // Base URL for booking (you can customize this)
+    const baseUrl = `http://localhost:${PORT}/booking`;
+    
+    // Create URL with pre-filled parameters
+    const params = new URLSearchParams({
+      name: name,
+      email: email,
+      ...(phone && { phone: phone }),
+      ...(serviceId && { serviceId: serviceId }),
+      ...(service && { serviceName: service.name }),
+      ...(service && { servicePrice: service.price }),
+      ...(notes && { notes: notes })
+    });
+    
+    const bookingLink = `${baseUrl}?${params.toString()}`;
+    
+    // If Calendly is connected, also create a Calendly link
+    let calendlyLink = null;
+    if (calendlyConnected) {
+      try {
+        const response = await axios.post(
+          `${CALENDLY_API_BASE}/scheduling_links`,
+          {
+            max_event_count: 1,
+            owner: process.env.CALENDLY_EVENT_TYPE_URI || calendlyEventTypes[0]?.uri,
+            owner_type: 'EventType'
+          },
+          { headers: calendlyHeaders }
+        );
+        
+        calendlyLink = response.data.resource.booking_url + 
+          `?name=${encodeURIComponent(name)}` +
+          `&email=${encodeURIComponent(email)}` +
+          `&a1=${encodeURIComponent(phone || '')}` +
+          `&a2=${encodeURIComponent(service?.name || '')}` +
+          `&a3=${encodeURIComponent(notes || '')}`;
+      } catch (err) {
+        console.error('Error creating Calendly link:', err.message);
+      }
+    }
+    
+    res.json({
+      success: true,
+      links: {
+        booking: bookingLink,
+        calendly: calendlyLink
+      },
+      prefilledData: {
+        name,
+        email,
+        phone: phone || 'Not provided',
+        service: service ? {
+          id: service.id,
+          name: service.name,
+          price: `$${service.price}`
+        } : null,
+        notes: notes || null
+      },
+      message: 'Use these links to send to the customer with their information pre-filled'
+    });
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
     });
   }
 });
