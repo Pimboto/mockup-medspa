@@ -23,6 +23,9 @@ const calendlyHeaders = {
 app.use(cors());
 app.use(express.json());
 
+// Raw body parser for webhooks (needed for Calendly signature verification)
+app.use('/api/webhooks', express.raw({type: 'application/json'}));
+
 // Services data
 let servicesData = null;
 let calendlyConnected = false;
@@ -192,6 +195,10 @@ app.get('/', (req, res) => {
       availability: '/api/availability',
       bookings: '/api/bookings',
       bookingLink: '/api/booking-link',
+      webhooks: {
+        calendly: '/api/webhooks/calendly',
+        recentBookings: '/api/recent-bookings'
+      },
       calendly: {
         eventTypes: '/api/calendly/event-types',
         user: '/api/calendly/user'
@@ -772,6 +779,135 @@ app.get('/api/calendly/user', (req, res) => {
   res.json({
     success: true,
     user: calendlyUserInfo
+  });
+});
+
+// ============================================
+// CALENDLY WEBHOOKS
+// ============================================
+
+// Store recent bookings for notifications
+let recentBookings = [];
+
+// Helper function to send booking notification
+async function sendBookingNotification(bookingData) {
+  console.log('\n🎉 ===== NEW BOOKING ALERT! =====');
+  console.log(`👤 Customer: ${bookingData.customerName}`);
+  console.log(`📧 Email: ${bookingData.customerEmail}`);
+  console.log(`💅 Service: ${bookingData.service}`);
+  console.log(`📅 Date/Time: ${bookingData.datetime}`);
+  console.log(`💰 Price: ${bookingData.price || 'N/A'}`);
+  console.log('================================\n');
+  
+  // Store in recent bookings (keep last 10)
+  recentBookings.unshift(bookingData);
+  if (recentBookings.length > 10) {
+    recentBookings = recentBookings.slice(0, 10);
+  }
+  
+  // TODO: Send to n8n workflow, chat system, email, etc.
+  // Example webhook call to n8n:
+  // try {
+  //   await axios.post('https://your-n8n-instance.com/webhook/new-booking', bookingData);
+  // } catch (error) {
+  //   console.error('Error sending to n8n:', error.message);
+  // }
+}
+
+// Calendly webhook endpoint
+app.post('/api/webhooks/calendly', (req, res) => {
+  try {
+    console.log('\n📨 Received webhook from Calendly');
+    
+    // Parse the webhook payload
+    const webhookData = JSON.parse(req.body);
+    console.log('Webhook event:', webhookData.event);
+    
+    // Handle new booking created
+    if (webhookData.event === 'invitee.created') {
+      const payload = webhookData.payload;
+      
+      // Extract service name from questions or event type
+      let serviceName = 'General Consultation';
+      if (payload.questions_and_answers) {
+        const serviceQuestion = payload.questions_and_answers.find(qa => 
+          qa.question.toLowerCase().includes('service') || 
+          qa.question.toLowerCase().includes('treatment')
+        );
+        if (serviceQuestion) {
+          serviceName = serviceQuestion.answer;
+        }
+      }
+      
+      // Find matching service for price
+      let servicePrice = null;
+      if (servicesData && servicesData.services) {
+        const matchingService = servicesData.services.find(s => 
+          s.name.toLowerCase().includes(serviceName.toLowerCase()) ||
+          serviceName.toLowerCase().includes(s.name.toLowerCase())
+        );
+        if (matchingService) {
+          servicePrice = `$${matchingService.price}`;
+          serviceName = matchingService.name; // Use exact service name
+        }
+      }
+      
+      // Format booking data
+      const bookingData = {
+        id: payload.uri?.split('/').pop() || 'unknown',
+        customerName: payload.name,
+        customerEmail: payload.email,
+        service: serviceName,
+        datetime: new Date(payload.created_at).toLocaleString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+          timeZone: payload.timezone || 'America/New_York'
+        }),
+        price: servicePrice,
+        status: payload.status,
+        cancelUrl: payload.cancel_url,
+        rescheduleUrl: payload.reschedule_url,
+        timezone: payload.timezone,
+        questions: payload.questions_and_answers || [],
+        timestamp: new Date().toISOString()
+      };
+      
+      // Send notification
+      sendBookingNotification(bookingData);
+      
+    } else if (webhookData.event === 'invitee.canceled') {
+      console.log('\n❌ Booking Canceled:');
+      console.log('Customer:', webhookData.payload.name);
+      console.log('Email:', webhookData.payload.email);
+      console.log('===================\n');
+    }
+    
+    // Respond to Calendly
+    res.status(200).json({ 
+      success: true, 
+      message: 'Webhook received and processed' 
+    });
+    
+  } catch (error) {
+    console.error('❌ Webhook processing error:', error.message);
+    res.status(400).json({ 
+      success: false, 
+      error: 'Invalid webhook payload' 
+    });
+  }
+});
+
+// Endpoint to view recent bookings (for testing/monitoring)
+app.get('/api/recent-bookings', (req, res) => {
+  res.json({
+    success: true,
+    totalBookings: recentBookings.length,
+    bookings: recentBookings
   });
 });
 
