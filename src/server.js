@@ -590,10 +590,12 @@ app.get('/api/booking-link', async (req, res) => {
       }
     }
     
-    // Base URL for booking (you can customize this)
+    // Base URL for booking - use Railway domain in production
     const baseUrl = process.env.BASE_URL 
       ? `${process.env.BASE_URL}/booking`
-      : `http://localhost:${PORT}/booking`;
+      : process.env.RAILWAY_PUBLIC_DOMAIN 
+        ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}/booking`
+        : `https://mockup-medspa-dev.up.railway.app/booking`;
     
     // Create URL with pre-filled parameters
     const params = new URLSearchParams({
@@ -635,22 +637,11 @@ app.get('/api/booking-link', async (req, res) => {
     
     res.json({
       success: true,
-      links: {
-        booking: bookingLink,
-        calendly: calendlyLink
-      },
-      prefilledData: {
-        name,
-        email,
-        phone: phone || 'Not provided',
-        service: service ? {
-          id: service.id,
-          name: service.name,
-          price: `$${service.price}`
-        } : null,
-        notes: notes || null
-      },
-      message: 'Use these links to send to the customer with their information pre-filled'
+      bookingLink: calendlyLink || bookingLink,
+      customerName: name,
+      customerEmail: email,
+      service: service ? service.name : 'General consultation',
+      message: `Perfect ${name}! Here's your personalized booking link. Click it to select your preferred time.`
     });
     
   } catch (error) {
