@@ -358,7 +358,7 @@ app.get('/api/availability', async (req, res) => {
     );
     
     // Simplify the response for AI agents - only time and formatted
-    const simplifiedTimes = response.data.collection.map(slot => ({
+    let simplifiedTimes = response.data.collection.map(slot => ({
       time: slot.start_time.split('T')[1].replace('Z', ''),
       formatted: new Date(slot.start_time).toLocaleString('en-US', {
         weekday: 'short',
@@ -367,15 +367,78 @@ app.get('/api/availability', async (req, res) => {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true
-      })
+      }),
+      startTime: slot.start_time
+    }));
+
+    // Filter by specific time if provided
+    if (req.query.time) {
+      const requestedTime = req.query.time;
+      console.log(`Filtering availability for time: ${requestedTime}`);
+      
+      // Convert requested time to 24h format if needed
+      let targetHour = null;
+      
+      // Handle different time formats
+      if (requestedTime.match(/^\d{1,2}:\d{2}$/)) {
+        // Format: "14:00" or "2:00"
+        targetHour = parseInt(requestedTime.split(':')[0]);
+      } else if (requestedTime.match(/^\d{1,2}(am|pm)$/i)) {
+        // Format: "2pm" or "2AM"
+        let hour = parseInt(requestedTime.replace(/[^\d]/g, ''));
+        const period = requestedTime.toLowerCase().includes('pm') ? 'pm' : 'am';
+        if (period === 'pm' && hour !== 12) hour += 12;
+        if (period === 'am' && hour === 12) hour = 0;
+        targetHour = hour;
+      } else if (requestedTime.match(/^\d{1,2}:\d{2}(am|pm)$/i)) {
+        // Format: "2:00pm" or "2:30AM"
+        let hour = parseInt(requestedTime.split(':')[0]);
+        const period = requestedTime.toLowerCase().includes('pm') ? 'pm' : 'am';
+        if (period === 'pm' && hour !== 12) hour += 12;
+        if (period === 'am' && hour === 12) hour = 0;
+        targetHour = hour;
+      }
+
+      if (targetHour !== null) {
+        // Filter slots within 2 hours of the requested time
+        const filteredTimes = simplifiedTimes.filter(slot => {
+          const slotHour = parseInt(slot.time.split(':')[0]);
+          return Math.abs(slotHour - targetHour) <= 2;
+        });
+
+        // If no slots found for that time, get closest available times
+        if (filteredTimes.length === 0) {
+          console.log(`No slots found for ${requestedTime}, finding closest times...`);
+          
+          // Find closest times (within 4 hours)
+          const closestTimes = simplifiedTimes.filter(slot => {
+            const slotHour = parseInt(slot.time.split(':')[0]);
+            return Math.abs(slotHour - targetHour) <= 4;
+          }).slice(0, 3); // Limit to 3 closest
+
+          simplifiedTimes = closestTimes;
+        } else {
+          simplifiedTimes = filteredTimes.slice(0, 5); // Limit to 5 slots
+        }
+      }
+    } else {
+      // If no specific time requested, limit to first 8 slots to keep response manageable
+      simplifiedTimes = simplifiedTimes.slice(0, 8);
+    }
+
+    // Remove startTime from final response (was only needed for filtering)
+    const finalTimes = simplifiedTimes.map(slot => ({
+      time: slot.time,
+      formatted: slot.formatted
     }));
 
     res.json({
       success: true,
       source: 'calendly',
       requestedDate: req.query.date || 'current',
-      totalSlots: simplifiedTimes.length,
-      availableTimes: simplifiedTimes
+      requestedTime: req.query.time || 'all',
+      totalSlots: finalTimes.length,
+      availableTimes: finalTimes
     });
     
   } catch (error) {
