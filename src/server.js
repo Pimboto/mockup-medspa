@@ -624,12 +624,18 @@ app.get('/api/booking-link', async (req, res) => {
           { headers: calendlyHeaders }
         );
         
-        calendlyLink = response.data.resource.booking_url + 
-          `?name=${encodeURIComponent(name)}` +
-          `&email=${encodeURIComponent(email)}` +
-          `&a1=${encodeURIComponent(phone || '')}` +
-          `&a2=${encodeURIComponent(service?.name || '')}` +
-          `&a3=${encodeURIComponent(notes || '')}`;
+        // Pre-fill Calendly form with service selection
+        let calendlyParams = new URLSearchParams({
+          name: name,
+          email: email
+        });
+        
+        // Add service as a pre-filled question
+        if (service) {
+          calendlyParams.append('a1', service.name); // First custom question
+        }
+        
+        calendlyLink = response.data.resource.booking_url + '?' + calendlyParams.toString();
       } catch (err) {
         console.error('Error creating Calendly link:', err.message);
       }
