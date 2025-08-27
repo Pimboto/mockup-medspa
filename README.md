@@ -58,6 +58,11 @@ npm install
 # Server Configuration
 PORT=3000
 
+# Base URL for the application (used for generating links)
+# In production (Railway): https://mockup-medspa-dev.up.railway.app
+# In development: http://localhost:3000
+BASE_URL=https://mockup-medspa-dev.up.railway.app
+
 # Calendly API Configuration
 CALENDLY_API_TOKEN=your_personal_access_token_here
 CALENDLY_USER_URI=https://api.calendly.com/users/YOUR_USER_ID

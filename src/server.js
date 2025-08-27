@@ -287,16 +287,50 @@ app.get('/api/availability', async (req, res) => {
     }
     
     // Parse and validate date
-    const requestedDate = req.query.date || new Date().toISOString();
-    const startTime = new Date(requestedDate);
+    const now = new Date();
+    let startTime;
     
-    if (isNaN(startTime.getTime())) {
-      return res.json({
-        success: false,
-        error: 'Invalid date format',
-        message: 'Please provide date in ISO format (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ssZ)',
-        example: new Date().toISOString()
-      });
+    if (req.query.date) {
+      // If user provides a date
+      const requestedDate = req.query.date;
+      startTime = new Date(requestedDate);
+      
+      if (isNaN(startTime.getTime())) {
+        return res.json({
+          success: false,
+          error: 'Invalid date format',
+          message: 'Please provide date in ISO format (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ssZ)',
+          example: new Date().toISOString()
+        });
+      }
+      
+      // If it's just a date (YYYY-MM-DD), check if it's today
+      if (requestedDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const today = now.toISOString().split('T')[0];
+        const requestedDateOnly = requestedDate;
+        
+        if (requestedDateOnly === today) {
+          // If it's today, start from current time
+          startTime = new Date(now.getTime() + 60 * 60 * 1000); // Add 1 hour buffer
+        } else if (new Date(requestedDateOnly) < new Date(today)) {
+          // If it's in the past
+          return res.json({
+            success: false,
+            error: 'Date must be in the future',
+            message: `Cannot check availability for past dates. Today is ${today}`,
+            requestedDate: requestedDateOnly
+          });
+        }
+        // If it's a future date, keep the original time (midnight)
+      }
+    } else {
+      // No date provided, use current time + 1 hour
+      startTime = new Date(now.getTime() + 60 * 60 * 1000);
+    }
+    
+    // Ensure start time is in the future
+    if (startTime <= now) {
+      startTime = new Date(now.getTime() + 60 * 60 * 1000); // Add 1 hour buffer
     }
     
     // Calculate end time (7 days from start)
@@ -304,8 +338,11 @@ app.get('/api/availability', async (req, res) => {
     
     console.log('Fetching availability:', {
       eventType: eventTypeUri,
+      currentTime: now.toISOString(),
+      requestedDate: req.query.date || 'not provided',
       startTime: startTime.toISOString(),
-      endTime: endTime.toISOString()
+      endTime: endTime.toISOString(),
+      isToday: req.query.date === now.toISOString().split('T')[0]
     });
     
     const response = await axios.get(
@@ -320,14 +357,25 @@ app.get('/api/availability', async (req, res) => {
       }
     );
     
+    // Simplify the response for AI agents - only time and formatted
+    const simplifiedTimes = response.data.collection.map(slot => ({
+      time: slot.start_time.split('T')[1].replace('Z', ''),
+      formatted: new Date(slot.start_time).toLocaleString('en-US', {
+        weekday: 'short',
+        month: 'short', 
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      })
+    }));
+
     res.json({
       success: true,
       source: 'calendly',
-      dateRange: {
-        start: startTime.toISOString(),
-        end: endTime.toISOString()
-      },
-      availableTimes: response.data.collection || []
+      requestedDate: req.query.date || 'current',
+      totalSlots: simplifiedTimes.length,
+      availableTimes: simplifiedTimes
     });
     
   } catch (error) {
@@ -480,7 +528,9 @@ app.get('/api/booking-link', async (req, res) => {
     }
     
     // Base URL for booking (you can customize this)
-    const baseUrl = `http://localhost:${PORT}/booking`;
+    const baseUrl = process.env.BASE_URL 
+      ? `${process.env.BASE_URL}/booking`
+      : `http://localhost:${PORT}/booking`;
     
     // Create URL with pre-filled parameters
     const params = new URLSearchParams({
