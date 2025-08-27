@@ -572,7 +572,7 @@ app.get('/api/bookings', async (req, res) => {
 
 // Create a personalized booking link
 app.get('/api/booking-link', async (req, res) => {
-  const { name, email, phone, serviceId, notes } = req.query;
+  const { name, email, phone, serviceId, notes, sessionId } = req.query;
   
   // Validate required parameters
   if (!name || !email) {
@@ -631,7 +631,7 @@ app.get('/api/booking-link', async (req, res) => {
           { headers: calendlyHeaders }
         );
         
-        // Pre-fill Calendly form with service selection
+        // Pre-fill Calendly form with service selection and tracking
         let calendlyParams = new URLSearchParams({
           name: name,
           email: email
@@ -640,6 +640,14 @@ app.get('/api/booking-link', async (req, res) => {
         // Add service as a pre-filled question
         if (service) {
           calendlyParams.append('a1', service.name); // First custom question
+        }
+        
+        // Add UTM parameters for tracking (including sessionId)
+        if (sessionId) {
+          calendlyParams.append('utm_source', 'medspa_chat');
+          calendlyParams.append('utm_medium', 'booking_agent');
+          calendlyParams.append('utm_campaign', sessionId); // Store sessionId here
+          calendlyParams.append('utm_content', service?.name || 'general');
         }
         
         calendlyLink = response.data.resource.booking_url + '?' + calendlyParams.toString();
@@ -654,6 +662,7 @@ app.get('/api/booking-link', async (req, res) => {
       customerName: name,
       customerEmail: email,
       service: service ? service.name : 'General consultation',
+      sessionId: sessionId || null,
       message: `Perfect ${name}! Here's your personalized booking link. Click it to select your preferred time.`
     });
     
@@ -797,6 +806,7 @@ async function sendBookingNotification(bookingData) {
   console.log(`💅 Service: ${bookingData.service}`);
   console.log(`📅 Date/Time: ${bookingData.datetime}`);
   console.log(`💰 Price: ${bookingData.price || 'N/A'}`);
+  console.log(`🔗 Session ID: ${bookingData.sessionId || 'Not provided'}`);
   console.log('================================\n');
   
   // Store in recent bookings (keep last 10)
@@ -852,6 +862,9 @@ app.post('/api/webhooks/calendly', (req, res) => {
         }
       }
       
+      // Extract sessionId from UTM parameters
+      const sessionId = payload.tracking?.utm_campaign || null;
+      
       // Format booking data
       const bookingData = {
         id: payload.uri?.split('/').pop() || 'unknown',
@@ -873,8 +886,11 @@ app.post('/api/webhooks/calendly', (req, res) => {
         cancelUrl: payload.cancel_url,
         rescheduleUrl: payload.reschedule_url,
         timezone: payload.timezone,
+        sessionId: sessionId,
         questions: payload.questions_and_answers || [],
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        // Include all tracking data for debugging
+        tracking: payload.tracking
       };
       
       // Send notification
