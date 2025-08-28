@@ -508,17 +508,28 @@ app.get('/api/bookings', async (req, res) => {
           
           const invitee = inviteesResponse.data.collection[0];
           
+          // Format dates in a readable way
+          const startDate = new Date(event.start_time);
+          const endDate = new Date(event.end_time);
+          
           const booking = {
             id: event.uri.split('/').pop(),
-            name: event.name,
-            startTime: event.start_time,
-            endTime: event.end_time,
+            service: event.name,
+            date: startDate.toLocaleDateString('en-US', {
+              weekday: 'long',
+              month: 'long', 
+              day: 'numeric',
+              year: 'numeric'
+            }),
+            time: startDate.toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+            }),
             status: event.status,
-            location: event.location?.location || 'TBD',
-            invitee: {
+            customer: {
               name: invitee?.name || 'Unknown',
-              email: invitee?.email || 'Unknown',
-              phone: invitee?.text_reminder_number || 'Not provided'
+              email: invitee?.email || 'Unknown'
             }
           };
           
@@ -530,17 +541,26 @@ app.get('/api/bookings', async (req, res) => {
           return booking;
         } catch (err) {
           console.error('Error fetching invitee details:', err.message);
+          const startDate = new Date(event.start_time);
+          
           return {
             id: event.uri.split('/').pop(),
-            name: event.name,
-            startTime: event.start_time,
-            endTime: event.end_time,
+            service: event.name,
+            date: startDate.toLocaleDateString('en-US', {
+              weekday: 'long',
+              month: 'long', 
+              day: 'numeric',
+              year: 'numeric'
+            }),
+            time: startDate.toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+            }),
             status: event.status,
-            location: event.location?.location || 'TBD',
-            invitee: {
+            customer: {
               name: 'Error loading',
-              email: 'Error loading',
-              phone: 'Error loading'
+              email: 'Error loading'
             }
           };
         }
@@ -553,10 +573,7 @@ app.get('/api/bookings', async (req, res) => {
     res.json({
       success: true,
       total: bookings.length,
-      filters: {
-        email: req.query.email || null,
-        phone: req.query.phone || null
-      },
+      customerEmail: req.query.email || null,
       bookings
     });
     
@@ -804,7 +821,8 @@ async function sendBookingNotification(bookingData) {
   console.log(`👤 Customer: ${bookingData.customerName}`);
   console.log(`📧 Email: ${bookingData.customerEmail}`);
   console.log(`💅 Service: ${bookingData.service}`);
-  console.log(`📅 Date/Time: ${bookingData.datetime}`);
+  console.log(`📅 Date: ${bookingData.appointmentDate}`);
+  console.log(`🕐 Time: ${bookingData.appointmentTime}`);
   console.log(`💰 Price: ${bookingData.price || 'N/A'}`);
   console.log(`🔗 Session ID: ${bookingData.sessionId || 'Not provided'}`);
   console.log('================================\n');
@@ -871,15 +889,16 @@ app.post('/api/webhooks/calendly', (req, res) => {
         customerName: payload.name,
         customerEmail: payload.email,
         service: serviceName,
-        datetime: new Date(payload.created_at).toLocaleString('en-US', {
+        appointmentDate: new Date(payload.scheduled_event?.start_time || payload.created_at).toLocaleDateString('en-US', {
           weekday: 'long',
           year: 'numeric',
           month: 'long',
-          day: 'numeric',
+          day: 'numeric'
+        }),
+        appointmentTime: new Date(payload.scheduled_event?.start_time || payload.created_at).toLocaleTimeString('en-US', {
           hour: 'numeric',
           minute: '2-digit',
-          hour12: true,
-          timeZone: payload.timezone || 'America/New_York'
+          hour12: true
         }),
         price: servicePrice,
         status: payload.status,
