@@ -635,7 +635,7 @@ app.get('/api/booking-link', async (req, res) => {
       ...(phone && { phone: phone }),
       ...(serviceId && { serviceId: serviceId }),
       ...(service && { serviceName: service.name }),
-      ...(service && { servicePrice: service.price }),
+      ...(service && { servicePrice: service.basePrice || service.unitPrice }),
       ...(notes && { notes: notes })
     });
     
@@ -882,7 +882,14 @@ app.post('/api/webhooks/calendly', (req, res) => {
           serviceName.toLowerCase().includes(s.name.toLowerCase())
         );
         if (matchingService) {
-          servicePrice = `$${matchingService.price}`;
+          // Handle different pricing models
+          if (matchingService.pricingModel === 'PER_UNIT' && matchingService.unitPrice) {
+            servicePrice = `$${matchingService.unitPrice}/unit (starting at $${matchingService.basePrice || 260})`;
+          } else if (matchingService.basePrice) {
+            servicePrice = `$${matchingService.basePrice}`;
+          } else {
+            servicePrice = 'Contact for pricing';
+          }
           serviceName = matchingService.name; // Use exact service name
         }
       }
