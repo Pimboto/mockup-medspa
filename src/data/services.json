@@ -4,7 +4,7 @@
     "name": "Botox Treatment",
     "category": "Injectables",
     "shortDescription": "Reduce fine lines and wrinkles with Botox.",
-    "longDescription": "Neuromodulator injections to soften dynamic wrinkles such as frown lines, forehead lines, and crow's feet. Results typically appear within 3–7 days and last 3–4 months.",
+    "longDescription": "Neuromodulator injections to soften dynamic wrinkles such as frown lines, forehead lines, and crow\u2019s feet. Results typically appear within 3\u20137 days and last 3\u20134 months.",
     "media": {
       "coverImageUrl": "",
       "galleryIds": []
@@ -16,8 +16,14 @@
       "basePrice": null,
       "unitPrice": 13,
       "tiers": [
-        { "minUnits": 20, "unitPrice": 12.5 },
-        { "minUnits": 40, "unitPrice": 12 }
+        {
+          "minUnits": 20,
+          "unitPrice": 12.5
+        },
+        {
+          "minUnits": 40,
+          "unitPrice": 12
+        }
       ],
       "packages": [
         {
@@ -32,14 +38,47 @@
         }
       ],
       "membershipAdjustments": [
-        { "membershipId": "mbr_glow", "type": "PERCENT", "value": 10 }
+        {
+          "membershipId": "mbr_glow",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
       "providerLevelAdjustments": [
-        { "level": "RN", "type": "PERCENT", "value": 0 },
-        { "level": "NP", "type": "PERCENT", "value": 5 },
-        { "level": "MD", "type": "PERCENT", "value": 10 }
+        {
+          "level": "RN",
+          "type": "PERCENT",
+          "value": 0
+        },
+        {
+          "level": "NP",
+          "type": "PERCENT",
+          "value": 5
+        },
+        {
+          "level": "MD",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
-      "taxable": true
+      "taxable": true,
+      "examples": [
+        {
+          "area": "Forehead (frontalis)",
+          "approxUnits": 20
+        },
+        {
+          "area": "Frown lines (glabella)",
+          "approxUnits": 15
+        },
+        {
+          "area": "Crow\u2019s feet (per side)",
+          "approxUnits": 10
+        }
+      ],
+      "displayNotes": [
+        "Pricing shown as per-unit only. Totals depend on units recommended during consultation."
+      ]
     },
     "booking": {
       "durationMinutes": 30,
@@ -47,25 +86,18 @@
       "cleanupBufferMinutes": 5,
       "leadTimeHoursMin": 2,
       "cancellationPolicyId": "can_24h",
-      "deposit": {
-        "required": true,
-        "type": "PERCENT",
-        "value": 20,
-        "appliesTo": "ORDER",
-        "refundableWindowHours": 24
-      },
       "onlineBookable": true,
       "maxGuests": 1
     },
     "clinical": {
-      "expectedDowntime": "None; mild redness or bumps for 15–60 minutes",
+      "expectedDowntime": "None; mild redness or bumps for 15\u201360 minutes",
       "contraindications": [
         "Pregnancy or breastfeeding",
         "Active infection at injection site",
         "Neuromuscular disorders (consult provider)"
       ],
       "preCare": [
-        "Avoid blood-thinning supplements 24–48 hours prior",
+        "Avoid blood-thinning supplements 24\u201348 hours prior",
         "Arrive makeup-free if possible"
       ],
       "postCare": [
@@ -78,21 +110,42 @@
     },
     "availability": {
       "locations": [
-        { "id": "loc_lake_worth", "enabled": true },
-        { "id": "loc_west_palm", "enabled": true }
+        {
+          "id": "loc_lake_worth",
+          "enabled": true
+        },
+        {
+          "id": "loc_west_palm",
+          "enabled": true
+        }
       ],
       "resources": [
-        { "type": "ROOM", "id": "room_inject_1" }
+        {
+          "type": "ROOM",
+          "id": "room_inject_1"
+        }
       ],
-      "providerLevelsAllowed": ["RN", "NP", "MD"]
+      "providerLevelsAllowed": [
+        "RN",
+        "NP",
+        "MD"
+      ]
     },
     "commerce": {
       "sku": "BOTOX",
       "upsells": [
-        { "serviceId": "srv_006", "label": "Pair with Dermal Filler" }
+        {
+          "serviceId": "srv_006",
+          "label": "Pair with Dermal Filler"
+        }
       ],
       "addons": [
-        { "id": "adn_numbing", "name": "Topical numbing", "price": 25, "durationMinutes": 10 }
+        {
+          "id": "adn_numbing",
+          "name": "Topical numbing",
+          "price": 25,
+          "durationMinutes": 10
+        }
       ],
       "giftCardEligible": true
     },
@@ -100,10 +153,26 @@
       "consentFormId": "consent_injectables",
       "hipaaSensitive": true
     },
-    "status": { "available": true, "visible": true },
-    "seo": { "slug": "botox", "keywords": ["botox","wrinkle relaxer","neuromodulator"] },
-    "i18n": { "defaultLocale": "en-US", "supported": ["en-US","es-ES"] },
-    "version": 2
+    "status": {
+      "available": true,
+      "visible": true
+    },
+    "seo": {
+      "slug": "botox",
+      "keywords": [
+        "botox",
+        "wrinkle relaxer",
+        "neuromodulator"
+      ]
+    },
+    "i18n": {
+      "defaultLocale": "en-US",
+      "supported": [
+        "en-US",
+        "es-ES"
+      ]
+    },
+    "version": 3
   },
   {
     "id": "srv_002",
@@ -132,10 +201,17 @@
         }
       ],
       "membershipAdjustments": [
-        { "membershipId": "mbr_glow", "type": "PERCENT", "value": 10 }
+        {
+          "membershipId": "mbr_glow",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
       "providerLevelAdjustments": [],
-      "taxable": true
+      "taxable": true,
+      "displayNotes": [
+        "Single flat price; no per-unit multiplication."
+      ]
     },
     "booking": {
       "durationMinutes": 60,
@@ -143,13 +219,6 @@
       "cleanupBufferMinutes": 5,
       "leadTimeHoursMin": 2,
       "cancellationPolicyId": "can_24h",
-      "deposit": {
-        "required": true,
-        "type": "PERCENT",
-        "value": 20,
-        "appliesTo": "ORDER",
-        "refundableWindowHours": 24
-      },
       "onlineBookable": true,
       "maxGuests": 1
     },
@@ -171,23 +240,51 @@
     },
     "availability": {
       "locations": [
-        { "id": "loc_lake_worth", "enabled": true },
-        { "id": "loc_boynton_beach", "enabled": true }
+        {
+          "id": "loc_lake_worth",
+          "enabled": true
+        },
+        {
+          "id": "loc_boynton_beach",
+          "enabled": true
+        }
       ],
       "resources": [
-        { "type": "MACHINE", "id": "hydrafacial_01" },
-        { "type": "ROOM", "id": "room_facial_a" }
+        {
+          "type": "MACHINE",
+          "id": "hydrafacial_01"
+        },
+        {
+          "type": "ROOM",
+          "id": "room_facial_a"
+        }
       ],
-      "providerLevelsAllowed": ["Esthetician", "RN"]
+      "providerLevelsAllowed": [
+        "Esthetician",
+        "RN"
+      ]
     },
     "commerce": {
       "sku": "HYDRA",
       "upsells": [
-        { "serviceId": "srv_005", "label": "Add Microneedling for texture" }
+        {
+          "serviceId": "srv_005",
+          "label": "Add Microneedling for texture"
+        }
       ],
       "addons": [
-        { "id": "adn_booster", "name": "Booster Serum", "price": 45, "durationMinutes": 0 },
-        { "id": "adn_neck", "name": "Neck Add-On", "price": 60, "durationMinutes": 10 }
+        {
+          "id": "adn_booster",
+          "name": "Booster Serum",
+          "price": 45,
+          "durationMinutes": 0
+        },
+        {
+          "id": "adn_neck",
+          "name": "Neck Add-On",
+          "price": 60,
+          "durationMinutes": 10
+        }
       ],
       "giftCardEligible": true
     },
@@ -195,10 +292,26 @@
       "consentFormId": "consent_facial",
       "hipaaSensitive": false
     },
-    "status": { "available": true, "visible": true },
-    "seo": { "slug": "hydrafacial", "keywords": ["hydrafacial","deep cleanse","hydration facial"] },
-    "i18n": { "defaultLocale": "en-US", "supported": ["en-US","es-ES"] },
-    "version": 2
+    "status": {
+      "available": true,
+      "visible": true
+    },
+    "seo": {
+      "slug": "hydrafacial",
+      "keywords": [
+        "hydrafacial",
+        "deep cleanse",
+        "hydration facial"
+      ]
+    },
+    "i18n": {
+      "defaultLocale": "en-US",
+      "supported": [
+        "en-US",
+        "es-ES"
+      ]
+    },
+    "version": 3
   },
   {
     "id": "srv_003",
@@ -215,12 +328,36 @@
       "pricingModel": "PER_AREA",
       "basePrice": null,
       "areas": [
-        { "id": "area_small_upper_lip", "name": "Upper Lip", "price": 90 },
-        { "id": "area_small_chin", "name": "Chin", "price": 110 },
-        { "id": "area_medium_underarms", "name": "Underarms", "price": 180 },
-        { "id": "area_medium_bikini", "name": "Bikini", "price": 220 },
-        { "id": "area_large_legs", "name": "Full Legs", "price": 520 },
-        { "id": "area_large_back", "name": "Back", "price": 600 }
+        {
+          "id": "area_small_upper_lip",
+          "name": "Upper Lip",
+          "price": 90
+        },
+        {
+          "id": "area_small_chin",
+          "name": "Chin",
+          "price": 110
+        },
+        {
+          "id": "area_medium_underarms",
+          "name": "Underarms",
+          "price": 180
+        },
+        {
+          "id": "area_medium_bikini",
+          "name": "Bikini",
+          "price": 220
+        },
+        {
+          "id": "area_large_legs",
+          "name": "Full Legs",
+          "price": 520
+        },
+        {
+          "id": "area_large_back",
+          "name": "Back",
+          "price": 600
+        }
       ],
       "packages": [
         {
@@ -245,13 +382,28 @@
         }
       ],
       "membershipAdjustments": [
-        { "membershipId": "mbr_glow", "type": "PERCENT", "value": 10 }
+        {
+          "membershipId": "mbr_glow",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
       "providerLevelAdjustments": [
-        { "level": "RN", "type": "PERCENT", "value": 0 },
-        { "level": "NP", "type": "PERCENT", "value": 10 }
+        {
+          "level": "RN",
+          "type": "PERCENT",
+          "value": 0
+        },
+        {
+          "level": "NP",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
-      "taxable": true
+      "taxable": true,
+      "displayNotes": [
+        "Pricing is per treatment area; choose area(s) for accurate pricing."
+      ]
     },
     "booking": {
       "durationMinutes": 30,
@@ -260,19 +412,12 @@
       "cleanupBufferMinutes": 5,
       "leadTimeHoursMin": 2,
       "cancellationPolicyId": "can_24h",
-      "deposit": {
-        "required": true,
-        "type": "PERCENT",
-        "value": 20,
-        "appliesTo": "ORDER",
-        "refundableWindowHours": 24
-      },
       "onlineBookable": true,
       "maxGuests": 1
     },
     "clinical": {
       "device": "Diode 810nm",
-      "skinTypes": "Fitzpatrick I–V",
+      "skinTypes": "Fitzpatrick I\u2013V",
       "sessionsRecommendedMin": 6,
       "sessionsRecommendedMax": 8,
       "sessionCadenceDaysMin": 28,
@@ -288,30 +433,62 @@
       ],
       "postCare": [
         "Apply SPF 30+ daily",
-        "Avoid hot tubs/saunas for 24–48 hours"
+        "Avoid hot tubs/saunas for 24\u201348 hours"
       ],
       "followUpNeeded": false
     },
     "availability": {
       "locations": [
-        { "id": "loc_lake_worth", "enabled": true },
-        { "id": "loc_royal_palm", "enabled": false }
+        {
+          "id": "loc_lake_worth",
+          "enabled": true
+        },
+        {
+          "id": "loc_royal_palm",
+          "enabled": false
+        }
       ],
       "resources": [
-        { "type": "MACHINE", "id": "laser_01" },
-        { "type": "ROOM", "id": "room_laser_a" }
+        {
+          "type": "MACHINE",
+          "id": "laser_01"
+        },
+        {
+          "type": "ROOM",
+          "id": "room_laser_a"
+        }
       ],
-      "providerLevelsAllowed": ["RN", "NP"]
+      "providerLevelsAllowed": [
+        "RN",
+        "NP"
+      ]
     },
     "commerce": {
       "sku": "LHR",
       "upsells": [
-        { "serviceId": "srv_007", "label": "Add IPL for discoloration", "position": "POST_BOOK" },
-        { "addonId": "adn_numbing", "label": "Topical numbing" }
+        {
+          "serviceId": "srv_007",
+          "label": "Add IPL for discoloration",
+          "position": "POST_BOOK"
+        },
+        {
+          "addonId": "adn_numbing",
+          "label": "Topical numbing"
+        }
       ],
       "addons": [
-        { "id": "adn_numbing", "name": "Topical numbing", "price": 25, "durationMinutes": 10 },
-        { "id": "adn_neck", "name": "Add Neck", "price": 95, "durationMinutes": 10 }
+        {
+          "id": "adn_numbing",
+          "name": "Topical numbing",
+          "price": 25,
+          "durationMinutes": 10
+        },
+        {
+          "id": "adn_neck",
+          "name": "Add Neck",
+          "price": 95,
+          "durationMinutes": 10
+        }
       ],
       "giftCardEligible": true
     },
@@ -319,10 +496,25 @@
       "consentFormId": "consent_laser",
       "hipaaSensitive": true
     },
-    "status": { "available": true, "visible": true },
-    "seo": { "slug": "laser-hair-removal", "keywords": ["laser hair removal","permanent hair reduction"] },
-    "i18n": { "defaultLocale": "en-US", "supported": ["en-US","es-ES"] },
-    "version": 2
+    "status": {
+      "available": true,
+      "visible": true
+    },
+    "seo": {
+      "slug": "laser-hair-removal",
+      "keywords": [
+        "laser hair removal",
+        "permanent hair reduction"
+      ]
+    },
+    "i18n": {
+      "defaultLocale": "en-US",
+      "supported": [
+        "en-US",
+        "es-ES"
+      ]
+    },
+    "version": 3
   },
   {
     "id": "srv_004",
@@ -339,9 +531,21 @@
       "pricingModel": "STARTING_AT",
       "basePrice": 250,
       "variants": [
-        { "id": "peel_light", "name": "Light Peel", "price": 250 },
-        { "id": "peel_medium", "name": "Medium Peel", "price": 350 },
-        { "id": "peel_plus", "name": "Brightening Plus", "price": 425 }
+        {
+          "id": "peel_light",
+          "name": "Light Peel",
+          "price": 250
+        },
+        {
+          "id": "peel_medium",
+          "name": "Medium Peel",
+          "price": 350
+        },
+        {
+          "id": "peel_plus",
+          "name": "Brightening Plus",
+          "price": 425
+        }
       ],
       "packages": [
         {
@@ -356,13 +560,28 @@
         }
       ],
       "membershipAdjustments": [
-        { "membershipId": "mbr_glow", "type": "PERCENT", "value": 10 }
+        {
+          "membershipId": "mbr_glow",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
       "providerLevelAdjustments": [
-        { "level": "Esthetician", "type": "PERCENT", "value": 0 },
-        { "level": "RN", "type": "PERCENT", "value": 5 }
+        {
+          "level": "Esthetician",
+          "type": "PERCENT",
+          "value": 0
+        },
+        {
+          "level": "RN",
+          "type": "PERCENT",
+          "value": 5
+        }
       ],
-      "taxable": true
+      "taxable": true,
+      "displayNotes": [
+        "Displayed as starting prices by variant; final selection set during consult."
+      ]
     },
     "booking": {
       "durationMinutes": 45,
@@ -370,47 +589,52 @@
       "cleanupBufferMinutes": 10,
       "leadTimeHoursMin": 2,
       "cancellationPolicyId": "can_24h",
-      "deposit": {
-        "required": true,
-        "type": "PERCENT",
-        "value": 20,
-        "appliesTo": "ORDER",
-        "refundableWindowHours": 24
-      },
       "onlineBookable": true,
       "maxGuests": 1
     },
     "clinical": {
-      "expectedDowntime": "Light flaking to moderate peeling for 2–5 days depending on depth",
+      "expectedDowntime": "Light flaking to moderate peeling for 2\u20135 days depending on depth",
       "contraindications": [
         "Accutane within 6 months",
         "Active cold sores or open lesions",
         "Recent waxing or laser in treatment area"
       ],
       "preCare": [
-        "Pause retinoids/acids 5–7 days prior",
+        "Pause retinoids/acids 5\u20137 days prior",
         "Avoid sun exposure for 1 week prior"
       ],
       "postCare": [
         "Do not pick/peel flaking skin",
         "Use bland moisturizer and SPF 30+",
-        "Avoid heat/exercise 24–48 hours"
+        "Avoid heat/exercise 24\u201348 hours"
       ],
       "followUpNeeded": false
     },
     "availability": {
       "locations": [
-        { "id": "loc_lake_worth", "enabled": true }
+        {
+          "id": "loc_lake_worth",
+          "enabled": true
+        }
       ],
       "resources": [
-        { "type": "ROOM", "id": "room_skin_1" }
+        {
+          "type": "ROOM",
+          "id": "room_skin_1"
+        }
       ],
-      "providerLevelsAllowed": ["Esthetician", "RN"]
+      "providerLevelsAllowed": [
+        "Esthetician",
+        "RN"
+      ]
     },
     "commerce": {
       "sku": "PEEL",
       "upsells": [
-        { "serviceId": "srv_007", "label": "Add IPL for pigmentation" }
+        {
+          "serviceId": "srv_007",
+          "label": "Add IPL for pigmentation"
+        }
       ],
       "addons": [],
       "giftCardEligible": true
@@ -419,10 +643,26 @@
       "consentFormId": "consent_peel",
       "hipaaSensitive": false
     },
-    "status": { "available": true, "visible": true },
-    "seo": { "slug": "chemical-peel", "keywords": ["chemical peel","exfoliation","brightening"] },
-    "i18n": { "defaultLocale": "en-US", "supported": ["en-US","es-ES"] },
-    "version": 2
+    "status": {
+      "available": true,
+      "visible": true
+    },
+    "seo": {
+      "slug": "chemical-peel",
+      "keywords": [
+        "chemical peel",
+        "exfoliation",
+        "brightening"
+      ]
+    },
+    "i18n": {
+      "defaultLocale": "en-US",
+      "supported": [
+        "en-US",
+        "es-ES"
+      ]
+    },
+    "version": 3
   },
   {
     "id": "srv_005",
@@ -451,13 +691,28 @@
         }
       ],
       "membershipAdjustments": [
-        { "membershipId": "mbr_glow", "type": "PERCENT", "value": 10 }
+        {
+          "membershipId": "mbr_glow",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
       "providerLevelAdjustments": [
-        { "level": "RN", "type": "PERCENT", "value": 0 },
-        { "level": "NP", "type": "PERCENT", "value": 10 }
+        {
+          "level": "RN",
+          "type": "PERCENT",
+          "value": 0
+        },
+        {
+          "level": "NP",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
-      "taxable": true
+      "taxable": true,
+      "displayNotes": [
+        "Single flat price; no per-unit multiplication."
+      ]
     },
     "booking": {
       "durationMinutes": 75,
@@ -465,13 +720,6 @@
       "cleanupBufferMinutes": 10,
       "leadTimeHoursMin": 2,
       "cancellationPolicyId": "can_24h",
-      "deposit": {
-        "required": true,
-        "type": "PERCENT",
-        "value": 20,
-        "appliesTo": "ORDER",
-        "refundableWindowHours": 24
-      },
       "onlineBookable": true,
       "maxGuests": 1
     },
@@ -479,14 +727,14 @@
       "sessionsRecommendedMin": 3,
       "sessionsRecommendedMax": 4,
       "sessionCadenceDaysMin": 28,
-      "expectedDowntime": "Redness 24–48 hours; possible flaking 2–3 days",
+      "expectedDowntime": "Redness 24\u201348 hours; possible flaking 2\u20133 days",
       "contraindications": [
         "Active acne cysts or infection",
         "Keloid scarring history (consult provider)",
         "Isotretinoin within 6 months"
       ],
       "preCare": [
-        "Avoid retinoids/peels 5–7 days prior",
+        "Avoid retinoids/peels 5\u20137 days prior",
         "Arrive with clean skin"
       ],
       "postCare": [
@@ -498,22 +746,45 @@
     },
     "availability": {
       "locations": [
-        { "id": "loc_lake_worth", "enabled": true },
-        { "id": "loc_boynton_beach", "enabled": true }
+        {
+          "id": "loc_lake_worth",
+          "enabled": true
+        },
+        {
+          "id": "loc_boynton_beach",
+          "enabled": true
+        }
       ],
       "resources": [
-        { "type": "MACHINE", "id": "pen_01" },
-        { "type": "ROOM", "id": "room_skin_2" }
+        {
+          "type": "MACHINE",
+          "id": "pen_01"
+        },
+        {
+          "type": "ROOM",
+          "id": "room_skin_2"
+        }
       ],
-      "providerLevelsAllowed": ["RN", "NP"]
+      "providerLevelsAllowed": [
+        "RN",
+        "NP"
+      ]
     },
     "commerce": {
       "sku": "MICRO",
       "upsells": [
-        { "addonId": "adn_prp", "label": "Add PRP" }
+        {
+          "addonId": "adn_prp",
+          "label": "Add PRP"
+        }
       ],
       "addons": [
-        { "id": "adn_prp", "name": "PRP Add-On", "price": 200, "durationMinutes": 15 }
+        {
+          "id": "adn_prp",
+          "name": "PRP Add-On",
+          "price": 200,
+          "durationMinutes": 15
+        }
       ],
       "giftCardEligible": true
     },
@@ -521,17 +792,33 @@
       "consentFormId": "consent_microneedling",
       "hipaaSensitive": true
     },
-    "status": { "available": true, "visible": true },
-    "seo": { "slug": "microneedling", "keywords": ["microneedling","collagen induction","skin texture"] },
-    "i18n": { "defaultLocale": "en-US", "supported": ["en-US","es-ES"] },
-    "version": 2
+    "status": {
+      "available": true,
+      "visible": true
+    },
+    "seo": {
+      "slug": "microneedling",
+      "keywords": [
+        "microneedling",
+        "collagen induction",
+        "skin texture"
+      ]
+    },
+    "i18n": {
+      "defaultLocale": "en-US",
+      "supported": [
+        "en-US",
+        "es-ES"
+      ]
+    },
+    "version": 3
   },
   {
     "id": "srv_006",
     "name": "Dermal Fillers",
     "category": "Injectables",
     "shortDescription": "Restore volume and enhance contours.",
-    "longDescription": "Hyaluronic acid–based fillers to add volume, smooth lines, and contour features such as cheeks, lips, and jawline. Results are immediate and can last 6–18 months depending on product and area.",
+    "longDescription": "Hyaluronic acid\u2013based fillers to add volume, smooth lines, and contour features such as cheeks, lips, and jawline. Results are immediate and can last 6\u201318 months depending on product and area.",
     "media": {
       "coverImageUrl": "",
       "galleryIds": []
@@ -542,19 +829,61 @@
       "unitLabel": "syringe",
       "unitPrice": 800,
       "tiers": [
-        { "minUnits": 2, "unitPrice": 750 },
-        { "minUnits": 3, "unitPrice": 725 }
+        {
+          "minUnits": 2,
+          "unitPrice": 750
+        },
+        {
+          "minUnits": 3,
+          "unitPrice": 725
+        }
       ],
       "packages": [],
       "membershipAdjustments": [
-        { "membershipId": "mbr_glow", "type": "PERCENT", "value": 10 }
+        {
+          "membershipId": "mbr_glow",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
       "providerLevelAdjustments": [
-        { "level": "RN", "type": "PERCENT", "value": 0 },
-        { "level": "NP", "type": "PERCENT", "value": 5 },
-        { "level": "MD", "type": "PERCENT", "value": 10 }
+        {
+          "level": "RN",
+          "type": "PERCENT",
+          "value": 0
+        },
+        {
+          "level": "NP",
+          "type": "PERCENT",
+          "value": 5
+        },
+        {
+          "level": "MD",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
-      "taxable": true
+      "taxable": true,
+      "examples": [
+        {
+          "area": "Lips",
+          "approxUnits": 1,
+          "unitLabel": "syringe"
+        },
+        {
+          "area": "Cheeks (both sides)",
+          "approxUnits": 2,
+          "unitLabel": "syringe"
+        },
+        {
+          "area": "Jawline (both sides)",
+          "approxUnits": 2,
+          "unitLabel": "syringe"
+        }
+      ],
+      "displayNotes": [
+        "Pricing shown as per-unit only. Totals depend on units recommended during consultation."
+      ]
     },
     "booking": {
       "durationMinutes": 60,
@@ -562,25 +891,18 @@
       "cleanupBufferMinutes": 10,
       "leadTimeHoursMin": 2,
       "cancellationPolicyId": "can_24h",
-      "deposit": {
-        "required": true,
-        "type": "PERCENT",
-        "value": 20,
-        "appliesTo": "ORDER",
-        "refundableWindowHours": 24
-      },
       "onlineBookable": true,
       "maxGuests": 1
     },
     "clinical": {
-      "expectedDowntime": "Mild swelling/bruising 2–7 days",
+      "expectedDowntime": "Mild swelling/bruising 2\u20137 days",
       "contraindications": [
         "Pregnancy or breastfeeding",
         "Active infection at injection site",
         "History of severe allergies to filler components"
       ],
       "preCare": [
-        "Avoid alcohol and blood thinners 24–48 hours prior",
+        "Avoid alcohol and blood thinners 24\u201348 hours prior",
         "Consider arnica to minimize bruising"
       ],
       "postCare": [
@@ -593,21 +915,42 @@
     },
     "availability": {
       "locations": [
-        { "id": "loc_lake_worth", "enabled": true },
-        { "id": "loc_west_palm", "enabled": true }
+        {
+          "id": "loc_lake_worth",
+          "enabled": true
+        },
+        {
+          "id": "loc_west_palm",
+          "enabled": true
+        }
       ],
       "resources": [
-        { "type": "ROOM", "id": "room_inject_2" }
+        {
+          "type": "ROOM",
+          "id": "room_inject_2"
+        }
       ],
-      "providerLevelsAllowed": ["RN", "NP", "MD"]
+      "providerLevelsAllowed": [
+        "RN",
+        "NP",
+        "MD"
+      ]
     },
     "commerce": {
       "sku": "FILLER",
       "upsells": [
-        { "serviceId": "srv_001", "label": "Combine with Botox for lines" }
+        {
+          "serviceId": "srv_001",
+          "label": "Combine with Botox for lines"
+        }
       ],
       "addons": [
-        { "id": "adn_numbing", "name": "Topical numbing", "price": 25, "durationMinutes": 10 }
+        {
+          "id": "adn_numbing",
+          "name": "Topical numbing",
+          "price": 25,
+          "durationMinutes": 10
+        }
       ],
       "giftCardEligible": true
     },
@@ -615,17 +958,33 @@
       "consentFormId": "consent_injectables",
       "hipaaSensitive": true
     },
-    "status": { "available": true, "visible": true },
-    "seo": { "slug": "dermal-fillers", "keywords": ["dermal filler","lip filler","cheek filler"] },
-    "i18n": { "defaultLocale": "en-US", "supported": ["en-US","es-ES"] },
-    "version": 2
+    "status": {
+      "available": true,
+      "visible": true
+    },
+    "seo": {
+      "slug": "dermal-fillers",
+      "keywords": [
+        "dermal filler",
+        "lip filler",
+        "cheek filler"
+      ]
+    },
+    "i18n": {
+      "defaultLocale": "en-US",
+      "supported": [
+        "en-US",
+        "es-ES"
+      ]
+    },
+    "version": 3
   },
   {
     "id": "srv_007",
     "name": "IPL Photofacial",
     "category": "Laser Treatments",
     "shortDescription": "Treat sun damage, age spots, and redness.",
-    "longDescription": "Broad-spectrum light targets pigment and redness to improve overall tone and clarity. Best done in a series spaced 4–6 weeks apart.",
+    "longDescription": "Broad-spectrum light targets pigment and redness to improve overall tone and clarity. Best done in a series spaced 4\u20136 weeks apart.",
     "media": {
       "coverImageUrl": "",
       "galleryIds": []
@@ -634,10 +993,26 @@
       "currency": "USD",
       "pricingModel": "PER_AREA",
       "areas": [
-        { "id": "ipl_face", "name": "Face", "price": 500 },
-        { "id": "ipl_face_neck", "name": "Face + Neck", "price": 650 },
-        { "id": "ipl_hands", "name": "Hands", "price": 300 },
-        { "id": "ipl_chest", "name": "Chest", "price": 450 }
+        {
+          "id": "ipl_face",
+          "name": "Face",
+          "price": 500
+        },
+        {
+          "id": "ipl_face_neck",
+          "name": "Face + Neck",
+          "price": 650
+        },
+        {
+          "id": "ipl_hands",
+          "name": "Hands",
+          "price": 300
+        },
+        {
+          "id": "ipl_chest",
+          "name": "Chest",
+          "price": 450
+        }
       ],
       "packages": [
         {
@@ -652,13 +1027,28 @@
         }
       ],
       "membershipAdjustments": [
-        { "membershipId": "mbr_glow", "type": "PERCENT", "value": 10 }
+        {
+          "membershipId": "mbr_glow",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
       "providerLevelAdjustments": [
-        { "level": "RN", "type": "PERCENT", "value": 0 },
-        { "level": "NP", "type": "PERCENT", "value": 10 }
+        {
+          "level": "RN",
+          "type": "PERCENT",
+          "value": 0
+        },
+        {
+          "level": "NP",
+          "type": "PERCENT",
+          "value": 10
+        }
       ],
-      "taxable": true
+      "taxable": true,
+      "displayNotes": [
+        "Pricing is per treatment area; choose area(s) for accurate pricing."
+      ]
     },
     "booking": {
       "durationMinutes": 45,
@@ -667,13 +1057,6 @@
       "cleanupBufferMinutes": 5,
       "leadTimeHoursMin": 2,
       "cancellationPolicyId": "can_24h",
-      "deposit": {
-        "required": true,
-        "type": "PERCENT",
-        "value": 20,
-        "appliesTo": "ORDER",
-        "refundableWindowHours": 24
-      },
       "onlineBookable": true,
       "maxGuests": 1
     },
@@ -681,7 +1064,7 @@
       "sessionsRecommendedMin": 3,
       "sessionsRecommendedMax": 5,
       "sessionCadenceDaysMin": 28,
-      "expectedDowntime": "Darkening of spots and mild redness 24–72 hours; flaking up to 7 days",
+      "expectedDowntime": "Darkening of spots and mild redness 24\u201372 hours; flaking up to 7 days",
       "contraindications": [
         "Recent sun exposure or tanning",
         "Photosensitizing medications",
@@ -692,25 +1075,40 @@
         "Pause retinoids 5 days prior"
       ],
       "postCare": [
-        "SPF 30+ daily, avoid heat 24–48 hours",
+        "SPF 30+ daily, avoid heat 24\u201348 hours",
         "Do not pick flaking pigment"
       ],
       "followUpNeeded": false
     },
     "availability": {
       "locations": [
-        { "id": "loc_lake_worth", "enabled": true }
+        {
+          "id": "loc_lake_worth",
+          "enabled": true
+        }
       ],
       "resources": [
-        { "type": "MACHINE", "id": "ipl_01" },
-        { "type": "ROOM", "id": "room_laser_b" }
+        {
+          "type": "MACHINE",
+          "id": "ipl_01"
+        },
+        {
+          "type": "ROOM",
+          "id": "room_laser_b"
+        }
       ],
-      "providerLevelsAllowed": ["RN", "NP"]
+      "providerLevelsAllowed": [
+        "RN",
+        "NP"
+      ]
     },
     "commerce": {
       "sku": "IPL",
       "upsells": [
-        { "serviceId": "srv_004", "label": "Add Chemical Peel for texture" }
+        {
+          "serviceId": "srv_004",
+          "label": "Add Chemical Peel for texture"
+        }
       ],
       "addons": [],
       "giftCardEligible": true
@@ -719,17 +1117,34 @@
       "consentFormId": "consent_ipl",
       "hipaaSensitive": true
     },
-    "status": { "available": true, "visible": true },
-    "seo": { "slug": "ipl-photofacial", "keywords": ["IPL","photofacial","sun spots","redness"] },
-    "i18n": { "defaultLocale": "en-US", "supported": ["en-US","es-ES"] },
-    "version": 2
+    "status": {
+      "available": true,
+      "visible": true
+    },
+    "seo": {
+      "slug": "ipl-photofacial",
+      "keywords": [
+        "IPL",
+        "photofacial",
+        "sun spots",
+        "redness"
+      ]
+    },
+    "i18n": {
+      "defaultLocale": "en-US",
+      "supported": [
+        "en-US",
+        "es-ES"
+      ]
+    },
+    "version": 3
   },
   {
     "id": "srv_008",
     "name": "CoolSculpting",
     "category": "Body Contouring",
     "shortDescription": "Non-invasive fat reduction with controlled cooling.",
-    "longDescription": "Cryolipolysis targets and freezes fat cells in stubborn areas with no surgery or downtime. Results develop gradually over 1–3 months.",
+    "longDescription": "Cryolipolysis targets and freezes fat cells in stubborn areas with no surgery or downtime. Results develop gradually over 1\u20133 months.",
     "media": {
       "coverImageUrl": "",
       "galleryIds": []
@@ -740,8 +1155,14 @@
       "unitLabel": "cycle",
       "unitPrice": 600,
       "tiers": [
-        { "minUnits": 2, "unitPrice": 575 },
-        { "minUnits": 4, "unitPrice": 550 }
+        {
+          "minUnits": 2,
+          "unitPrice": 575
+        },
+        {
+          "minUnits": 4,
+          "unitPrice": 550
+        }
       ],
       "packages": [
         {
@@ -756,10 +1177,34 @@
         }
       ],
       "membershipAdjustments": [
-        { "membershipId": "mbr_glow", "type": "PERCENT", "value": 5 }
+        {
+          "membershipId": "mbr_glow",
+          "type": "PERCENT",
+          "value": 5
+        }
       ],
       "providerLevelAdjustments": [],
-      "taxable": true
+      "taxable": true,
+      "examples": [
+        {
+          "area": "Lower abdomen",
+          "approxUnits": 2,
+          "unitLabel": "cycle"
+        },
+        {
+          "area": "Flanks (both sides)",
+          "approxUnits": 2,
+          "unitLabel": "cycle"
+        },
+        {
+          "area": "Upper arms (both arms)",
+          "approxUnits": 2,
+          "unitLabel": "cycle"
+        }
+      ],
+      "displayNotes": [
+        "Pricing shown as per-unit only. Totals depend on units recommended during consultation."
+      ]
     },
     "booking": {
       "durationMinutes": 60,
@@ -768,13 +1213,6 @@
       "cleanupBufferMinutes": 10,
       "leadTimeHoursMin": 4,
       "cancellationPolicyId": "can_48h",
-      "deposit": {
-        "required": true,
-        "type": "PERCENT",
-        "value": 25,
-        "appliesTo": "ORDER",
-        "refundableWindowHours": 48
-      },
       "onlineBookable": true,
       "maxGuests": 1
     },
@@ -798,21 +1236,41 @@
     },
     "availability": {
       "locations": [
-        { "id": "loc_lake_worth", "enabled": true }
+        {
+          "id": "loc_lake_worth",
+          "enabled": true
+        }
       ],
       "resources": [
-        { "type": "MACHINE", "id": "cool_01" },
-        { "type": "ROOM", "id": "room_body_1" }
+        {
+          "type": "MACHINE",
+          "id": "cool_01"
+        },
+        {
+          "type": "ROOM",
+          "id": "room_body_1"
+        }
       ],
-      "providerLevelsAllowed": ["RN", "NP"]
+      "providerLevelsAllowed": [
+        "RN",
+        "NP"
+      ]
     },
     "commerce": {
       "sku": "COOL",
       "upsells": [
-        { "serviceId": "srv_002", "label": "Hydrafacial post-series for skin quality" }
+        {
+          "serviceId": "srv_002",
+          "label": "Hydrafacial post-series for skin quality"
+        }
       ],
       "addons": [
-        { "id": "adn_skin_tightening", "name": "Add Skin Tightening (area)", "price": 150, "durationMinutes": 20 }
+        {
+          "id": "adn_skin_tightening",
+          "name": "Add Skin Tightening (area)",
+          "price": 150,
+          "durationMinutes": 20
+        }
       ],
       "giftCardEligible": true
     },
@@ -820,9 +1278,25 @@
       "consentFormId": "consent_coolsculpting",
       "hipaaSensitive": true
     },
-    "status": { "available": true, "visible": true },
-    "seo": { "slug": "coolsculpting", "keywords": ["coolsculpting","fat reduction","body contouring"] },
-    "i18n": { "defaultLocale": "en-US", "supported": ["en-US","es-ES"] },
-    "version": 2
+    "status": {
+      "available": true,
+      "visible": true
+    },
+    "seo": {
+      "slug": "coolsculpting",
+      "keywords": [
+        "coolsculpting",
+        "fat reduction",
+        "body contouring"
+      ]
+    },
+    "i18n": {
+      "defaultLocale": "en-US",
+      "supported": [
+        "en-US",
+        "es-ES"
+      ]
+    },
+    "version": 3
   }
 ]
