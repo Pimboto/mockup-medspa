@@ -508,9 +508,9 @@ app.get('/api/bookings', async (req, res) => {
           
           const invitee = inviteesResponse.data.collection[0];
           
-          // Format dates in a readable way
+          // Format dates in the customer's timezone (from invitee data)
           const startDate = new Date(event.start_time);
-          const endDate = new Date(event.end_time);
+          const customerTimezone = invitee?.timezone || 'America/New_York'; // Default to EST if not available
           
           const booking = {
             id: event.uri.split('/').pop(),
@@ -519,13 +519,16 @@ app.get('/api/bookings', async (req, res) => {
               weekday: 'long',
               month: 'long', 
               day: 'numeric',
-              year: 'numeric'
+              year: 'numeric',
+              timeZone: customerTimezone
             }),
             time: startDate.toLocaleTimeString('en-US', {
               hour: 'numeric',
               minute: '2-digit',
-              hour12: true
+              hour12: true,
+              timeZone: customerTimezone
             }),
+            timezone: customerTimezone,
             status: event.status,
             customer: {
               name: invitee?.name || 'Unknown',
@@ -542,6 +545,7 @@ app.get('/api/bookings', async (req, res) => {
         } catch (err) {
           console.error('Error fetching invitee details:', err.message);
           const startDate = new Date(event.start_time);
+          const defaultTimezone = 'America/New_York'; // Default timezone when error
           
           return {
             id: event.uri.split('/').pop(),
@@ -550,13 +554,16 @@ app.get('/api/bookings', async (req, res) => {
               weekday: 'long',
               month: 'long', 
               day: 'numeric',
-              year: 'numeric'
+              year: 'numeric',
+              timeZone: defaultTimezone
             }),
             time: startDate.toLocaleTimeString('en-US', {
               hour: 'numeric',
               minute: '2-digit',
-              hour12: true
+              hour12: true,
+              timeZone: defaultTimezone
             }),
+            timezone: defaultTimezone,
             status: event.status,
             customer: {
               name: 'Error loading',
@@ -893,12 +900,14 @@ app.post('/api/webhooks/calendly', (req, res) => {
           weekday: 'long',
           year: 'numeric',
           month: 'long',
-          day: 'numeric'
+          day: 'numeric',
+          timeZone: payload.timezone || 'America/New_York'
         }),
         appointmentTime: new Date(payload.scheduled_event?.start_time || payload.created_at).toLocaleTimeString('en-US', {
           hour: 'numeric',
           minute: '2-digit',
-          hour12: true
+          hour12: true,
+          timeZone: payload.timezone || 'America/New_York'
         }),
         price: servicePrice,
         status: payload.status,
