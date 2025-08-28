@@ -1,8 +1,9 @@
-[
-  {
-    "id": "srv_001",
-    "name": "Botox Treatment",
-    "category": "Injectables",
+{
+  "services": [
+    {
+      "id": "srv_001",
+      "name": "Botox Treatment",
+      "category": "Injectables",
     "shortDescription": "Reduce fine lines and wrinkles with Botox.",
     "longDescription": "Neuromodulator injections to soften dynamic wrinkles such as frown lines, forehead lines, and crow\u2019s feet. Results typically appear within 3\u20137 days and last 3\u20134 months.",
     "media": {
@@ -173,9 +174,9 @@
       ]
     },
     "version": 3
-  },
-  {
-    "id": "srv_002",
+    },
+    {
+      "id": "srv_002",
     "name": "Hydrafacial",
     "category": "Facials",
     "shortDescription": "Deep cleanse, exfoliate, and hydrate.",
@@ -312,9 +313,9 @@
       ]
     },
     "version": 3
-  },
-  {
-    "id": "srv_003",
+    },
+    {
+      "id": "srv_003",
     "name": "Laser Hair Removal",
     "category": "Laser Treatments",
     "shortDescription": "Permanent hair reduction with medical-grade laser.",
@@ -515,9 +516,9 @@
       ]
     },
     "version": 3
-  },
-  {
-    "id": "srv_004",
+    },
+    {
+      "id": "srv_004",
     "name": "Chemical Peel",
     "category": "Skin Treatments",
     "shortDescription": "Medical-grade peel to improve texture and tone.",
@@ -663,9 +664,9 @@
       ]
     },
     "version": 3
-  },
-  {
-    "id": "srv_005",
+    },
+    {
+      "id": "srv_005",
     "name": "Microneedling",
     "category": "Skin Treatments",
     "shortDescription": "Stimulate collagen for smoother, firmer skin.",
@@ -812,9 +813,9 @@
       ]
     },
     "version": 3
-  },
-  {
-    "id": "srv_006",
+    },
+    {
+      "id": "srv_006",
     "name": "Dermal Fillers",
     "category": "Injectables",
     "shortDescription": "Restore volume and enhance contours.",
@@ -978,11 +979,11 @@
       ]
     },
     "version": 3
-  },
-  {
-    "id": "srv_007",
-    "name": "IPL Photofacial",
-    "category": "Laser Treatments",
+    },
+    {
+      "id": "srv_007",
+      "name": "IPL Photofacial",
+      "category": "Laser Treatments",
     "shortDescription": "Treat sun damage, age spots, and redness.",
     "longDescription": "Broad-spectrum light targets pigment and redness to improve overall tone and clarity. Best done in a series spaced 4\u20136 weeks apart.",
     "media": {
@@ -1138,9 +1139,9 @@
       ]
     },
     "version": 3
-  },
-  {
-    "id": "srv_008",
+    },
+    {
+      "id": "srv_008",
     "name": "CoolSculpting",
     "category": "Body Contouring",
     "shortDescription": "Non-invasive fat reduction with controlled cooling.",
@@ -1297,6 +1298,7 @@
         "es-ES"
       ]
     },
-    "version": 3
-  }
-]
+    "version": 4
+    }
+  ]
+}

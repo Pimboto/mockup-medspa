@@ -635,7 +635,7 @@ app.get('/api/booking-link', async (req, res) => {
       ...(phone && { phone: phone }),
       ...(serviceId && { serviceId: serviceId }),
       ...(service && { serviceName: service.name }),
-      ...(service && { servicePrice: service.basePrice || service.unitPrice }),
+      ...(service && { servicePrice: service.pricing?.basePrice || service.pricing?.unitPrice }),
       ...(notes && { notes: notes })
     });
     
@@ -883,10 +883,16 @@ app.post('/api/webhooks/calendly', (req, res) => {
         );
         if (matchingService) {
           // Handle different pricing models
-          if (matchingService.pricingModel === 'PER_UNIT' && matchingService.unitPrice) {
-            servicePrice = `$${matchingService.unitPrice}/unit (starting at $${matchingService.basePrice || 260})`;
-          } else if (matchingService.basePrice) {
-            servicePrice = `$${matchingService.basePrice}`;
+          const pricingModel = matchingService.pricing?.pricingModel;
+          if (pricingModel === 'PER_UNIT' && matchingService.pricing?.unitPrice) {
+            servicePrice = `$${matchingService.pricing.unitPrice}/${matchingService.pricing.unitLabel || 'unit'}`;
+          } else if (pricingModel === 'FLAT' && matchingService.pricing?.basePrice) {
+            servicePrice = `$${matchingService.pricing.basePrice}`;
+          } else if (pricingModel === 'STARTING_AT' && matchingService.pricing?.basePrice) {
+            servicePrice = `Starting at $${matchingService.pricing.basePrice}`;
+          } else if (pricingModel === 'PER_AREA' && matchingService.pricing?.areas) {
+            const minPrice = Math.min(...matchingService.pricing.areas.map(a => a.price));
+            servicePrice = `Starting at $${minPrice}`;
           } else {
             servicePrice = 'Contact for pricing';
           }
